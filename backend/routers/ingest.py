@@ -1,9 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from services.moss_service import index_to_moss
 from services.pdf_service import extract_and_chunk
 from services.chroma_service import index_chunks, get_collection_stats
 from services.video_service import load_transcript, get_chunks_from_transcript
-from services.moss_service import index_to_moss   # ← ADD THIS
 import shutil, os, json
 
 router = APIRouter(prefix="/ingest", tags=["ingest"])
@@ -32,38 +30,26 @@ async def ingest_pdf(product_id: str, file: UploadFile = File(...)):
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-# ─── VIDEO ─────────────────────────────────────────
-@router.post("/video/{product_id}")
-async def ingest_video(product_id: str, file: UploadFile = File(...)):
-    SUPPORTED = [".mp4", ".mov", ".avi", ".mkv", ".webm"]
-    ext = "." + file.filename.lower().split(".")[-1]
-    
-    if ext not in SUPPORTED:
-        raise HTTPException(status_code=400, detail=f"Unsupported video type: {ext}")
-    
+@router.post("/transcript/{product_id}/{video_id}")
+async def ingest_transcript(product_id: str, video_id: str, file: UploadFile = File(...)):
+    if not file.filename.endswith(".json"):
+        raise HTTPException(status_code=400, detail="Only JSON transcript files accepted")
     try:
-        video_bytes = await file.read()
-        
-        # Transcribe + chunk using Groq Whisper
-        chunks = transcribe_and_chunk(video_bytes, product_id, file.filename)
-        
-        if not chunks:
-            raise HTTPException(status_code=400, detail="No content extracted from video")
-        
+        content = await file.read()
+        transcript = json.loads(content)
+        chunks = get_chunks_from_transcript(transcript, product_id, video_id)
         result = index_chunks(product_id, chunks)
-        await index_to_moss(product_id, chunks)
         stats = get_collection_stats(product_id)
-        
         return {
             "status": "success",
-            "filename": file.filename,
+            "video_id": video_id,
+            "segments_processed": len(transcript),
             "chunks_indexed": result["indexed"],
             "total_chunks_in_db": stats["total_chunks"]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# ─── STATUS ────────────────────────────────────────
-@router.get("/status/{product_id}")
-async def index_status(product_id: str):
+@router.get("/stats/{product_id}")
+async def get_stats(product_id: str):
     return get_collection_stats(product_id)

@@ -13,9 +13,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-from routers import ingest, diagnose
+from routers import ingest, diagnose, chat
 app.include_router(ingest.router)
 app.include_router(diagnose.router)
+app.include_router(chat.router)
 
 @app.get("/")
 async def root():
