@@ -5,88 +5,104 @@ from typing import List, Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import chromadb
-from openai import OpenAI
+from dotenv import load_dotenv
+from google import genai
 
-# 1. Setup
-app = FastAPI(title="Multimodal Troubleshooting API")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+load_dotenv()
 
-# --- ADD YOUR OPENAI KEY HERE ---
-client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
+# 1. App Setup
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# 2. Vector DB (Member 2 will fill this)
-chroma_client = chromadb.PersistentClient(path="./maintenance_db")
-collection = chroma_client.get_or_create_collection(name="product_knowledge")
+app = FastAPI(title="Mantis — Product Diagnostic Platform")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
+# 2. Wire Routers
+from routers import ingest
+app.include_router(ingest.router)
+
+# 3. Chroma for diagnose endpoint
+from services.chroma_service import query_knowledge
+
+# 4. Response Model
 class DiagnosisResponse(BaseModel):
     answer: str
     confidence: float
     sources: List[dict]
     diagnostic_state: str
 
+# 5. Helper
 async def encode_image(file: UploadFile):
     bytes_data = await file.read()
     return base64.b64encode(bytes_data).decode('utf-8')
 
 # --- ENDPOINTS ---
 
-@app.post("/ingest")
-async def ingest_knowledge(text: str = Form(...), metadata_json: str = Form(...)):
-    """Member 2 uses this to add PDF/Video data"""
-    try:
-        meta = json.loads(metadata_json)
-        collection.add(
-            documents=[text],
-            metadatas=[meta],
-            ids=[f"id_{os.urandom(4).hex()}"]
-        )
-        return {"status": "success"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+@app.get("/")
+async def root():
+    return {"status": "Mantis API running", "docs": "/docs"}
 
 @app.post("/diagnose", response_model=DiagnosisResponse)
 async def diagnose(
+    product_id: str = Form(...),
     query: str = Form(...),
     image: Optional[UploadFile] = File(None)
 ):
-    """The main Brain of the platform"""
+    """
+    Main diagnostic endpoint using Gemini.
+    Member 3 will expand with multi-turn conversation history.
+    """
     try:
-        # 1. Search Vector DB for context
-        results = collection.query(query_texts=[query], n_results=3)
-        context = "\n".join(results['documents'][0]) if results['documents'] else "No manual context found."
-        sources = results['metadatas'][0] if results['metadatas'] else []
+        # 1. Retrieve relevant chunks from ChromaDB
+        chunks = query_knowledge(product_id, query, n_results=4)
+        context = "\n\n".join(c["text"] for c in chunks)
+        sources = [c["metadata"] for c in chunks]
 
-        # 2. Build the AI message
-        messages = [
-            {"role": "system", "content": f"You are a Master Maintenance Technician. Use this context: {context}"},
-            {"role": "user", "content": [{"type": "text", "text": query}]}
-        ]
+        if not context:
+            context = "No documentation found for this product."
 
-        # 3. Add Image if uploaded
+        # 2. Build prompt
+        system_prompt = f"""You are an expert diagnostic technician for this product.
+You have access to the official product documentation below.
+
+DOCUMENTATION:
+{context}
+
+RULES:
+- Never dump all information at once
+- Ask ONE focused follow-up question at a time to narrow down the issue
+- Only suggest a fix after gathering enough information
+- Always cite which section or page your answer comes from
+- Be concise and practical"""
+
+        # 3. Handle image if uploaded
         if image:
-            base64_img = await encode_image(image)
-            messages[1]["content"].append({
-                "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{base64_img}"}
-            })
-
-        # 4. Get Answer from GPT-4o
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages,
-            max_tokens=500
-        )
+            image_bytes = await file.read()
+            image_part = {
+                "mime_type": image.content_type,
+                "data": base64.b64encode(image_bytes).decode('utf-8')
+            }
+            response = model.generate_content([system_prompt, query, image_part])
+        else:
+            response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=f"{system_prompt}\n\nUser: {query}"
+)
 
         return DiagnosisResponse(
-            answer=response.choices[0].message.content,
+            answer=response.text,
             confidence=0.85,
             sources=sources,
-            diagnostic_state="Solution Identified"
+            diagnostic_state="Diagnosis In Progress"
         )
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

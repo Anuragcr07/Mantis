@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+chromadb
+pdfplumber
+openai
+python-multipart
+pydantic
+python-dotenv
+whisper
+yt-dlp
