@@ -1,0 +1,884 @@
+[
+  {
+    "start": 0.0,
+    "end": 2.64,
+    "text": "Here we have our basic refrigeration cycle power point",
+    "timestamp_label": "0:00"
+  },
+  {
+    "start": 2.64,
+    "end": 4.96,
+    "text": "for new students to understand.",
+    "timestamp_label": "0:02"
+  },
+  {
+    "start": 4.96,
+    "end": 8.16,
+    "text": "And we have this side in red and that side on blue,",
+    "timestamp_label": "0:04"
+  },
+  {
+    "start": 8.16,
+    "end": 11.040000000000001,
+    "text": "because this is the high pressure high temperature side.",
+    "timestamp_label": "0:08"
+  },
+  {
+    "start": 11.040000000000001,
+    "end": 13.96,
+    "text": "And the other side is a low pressure low temperature side.",
+    "timestamp_label": "0:11"
+  },
+  {
+    "start": 13.96,
+    "end": 17.92,
+    "text": "And you have two components in any system that separate",
+    "timestamp_label": "0:13"
+  },
+  {
+    "start": 17.92,
+    "end": 19.080000000000002,
+    "text": "the high and low pressure sides.",
+    "timestamp_label": "0:17"
+  },
+  {
+    "start": 19.080000000000002,
+    "end": 21.28,
+    "text": "And that's the compressor and the metering device.",
+    "timestamp_label": "0:19"
+  },
+  {
+    "start": 21.28,
+    "end": 24.04,
+    "text": "So the compressor's job is to increase the pressure",
+    "timestamp_label": "0:21"
+  },
+  {
+    "start": 24.04,
+    "end": 26.84,
+    "text": "of the refrigerator in order to increase the temperature.",
+    "timestamp_label": "0:24"
+  },
+  {
+    "start": 26.84,
+    "end": 31.4,
+    "text": "The metering device's job is to lower the refrigerant's pressure",
+    "timestamp_label": "0:26"
+  },
+  {
+    "start": 31.4,
+    "end": 34.24,
+    "text": "in order to lower the temperature of the refrigerator.",
+    "timestamp_label": "0:31"
+  },
+  {
+    "start": 34.24,
+    "end": 37.84,
+    "text": "And so you have your low pressure, low temperature vapor",
+    "timestamp_label": "0:34"
+  },
+  {
+    "start": 37.84,
+    "end": 40.56,
+    "text": "refrigerant enters into a refrigerant compressor.",
+    "timestamp_label": "0:37"
+  },
+  {
+    "start": 40.56,
+    "end": 42.68,
+    "text": "In this case, it's a reciprocating compressor.",
+    "timestamp_label": "0:40"
+  },
+  {
+    "start": 42.68,
+    "end": 44.72,
+    "text": "That's what that looks like right there.",
+    "timestamp_label": "0:42"
+  },
+  {
+    "start": 44.72,
+    "end": 47.32,
+    "text": "And then you have on the outlet of the compressor",
+    "timestamp_label": "0:44"
+  },
+  {
+    "start": 47.32,
+    "end": 50.4,
+    "text": "high pressure, high temperature vapor refrigerant.",
+    "timestamp_label": "0:47"
+  },
+  {
+    "start": 50.4,
+    "end": 53.96,
+    "text": "And so what happens is the high pressure, high temperature",
+    "timestamp_label": "0:50"
+  },
+  {
+    "start": 53.96,
+    "end": 57.0,
+    "text": "discharge gas is entering into the condenser coil",
+    "timestamp_label": "0:53"
+  },
+  {
+    "start": 57.0,
+    "end": 60.2,
+    "text": "where the refrigerator is going to reject its heat at.",
+    "timestamp_label": "0:57"
+  },
+  {
+    "start": 60.2,
+    "end": 63.68,
+    "text": "And so the refrigerant traveling through a refrigeration cycle,",
+    "timestamp_label": "1:00"
+  },
+  {
+    "start": 63.68,
+    "end": 66.6,
+    "text": "the whole object is its moving heat.",
+    "timestamp_label": "1:03"
+  },
+  {
+    "start": 66.6,
+    "end": 70.96000000000001,
+    "text": "It absorbs the heat energy over at the indoor coil",
+    "timestamp_label": "1:06"
+  },
+  {
+    "start": 70.96000000000001,
+    "end": 72.32,
+    "text": "or the evaporator.",
+    "timestamp_label": "1:10"
+  },
+  {
+    "start": 72.32,
+    "end": 75.48,
+    "text": "And it rejects heat energy at the condenser coil.",
+    "timestamp_label": "1:12"
+  },
+  {
+    "start": 75.48,
+    "end": 76.92,
+    "text": "That's the job.",
+    "timestamp_label": "1:15"
+  },
+  {
+    "start": 76.92,
+    "end": 79.0,
+    "text": "And you are manipulating the refrigerator",
+    "timestamp_label": "1:16"
+  },
+  {
+    "start": 79.0,
+    "end": 81.68,
+    "text": "because you have a pressure increase in device",
+    "timestamp_label": "1:19"
+  },
+  {
+    "start": 81.68,
+    "end": 83.6,
+    "text": "and a pressure decrease in device.",
+    "timestamp_label": "1:21"
+  },
+  {
+    "start": 83.6,
+    "end": 86.8,
+    "text": "You're using air across the condenser coil",
+    "timestamp_label": "1:23"
+  },
+  {
+    "start": 86.8,
+    "end": 89.8,
+    "text": "in order to reject the heat from the refrigerant",
+    "timestamp_label": "1:26"
+  },
+  {
+    "start": 89.8,
+    "end": 91.19999999999999,
+    "text": "into the outdoor air.",
+    "timestamp_label": "1:29"
+  },
+  {
+    "start": 91.19999999999999,
+    "end": 93.08,
+    "text": "And you are absorbing heat energy",
+    "timestamp_label": "1:31"
+  },
+  {
+    "start": 93.08,
+    "end": 97.24,
+    "text": "by blowing the indoor air across that indoor coil.",
+    "timestamp_label": "1:33"
+  },
+  {
+    "start": 97.24,
+    "end": 100.75999999999999,
+    "text": "And then you have low temperature air on the other side.",
+    "timestamp_label": "1:37"
+  },
+  {
+    "start": 100.75999999999999,
+    "end": 103.67999999999999,
+    "text": "You have air, then you have a coil,",
+    "timestamp_label": "1:40"
+  },
+  {
+    "start": 103.67999999999999,
+    "end": 105.56,
+    "text": "and then you have the refrigerant inside.",
+    "timestamp_label": "1:43"
+  },
+  {
+    "start": 105.56,
+    "end": 108.52,
+    "text": "And so you have those three things happening.",
+    "timestamp_label": "1:45"
+  },
+  {
+    "start": 108.52,
+    "end": 110.67999999999999,
+    "text": "So you have high pressure, high temperature discharge gas",
+    "timestamp_label": "1:48"
+  },
+  {
+    "start": 110.67999999999999,
+    "end": 112.96,
+    "text": "traveling into the condenser coil.",
+    "timestamp_label": "1:50"
+  },
+  {
+    "start": 112.96,
+    "end": 115.16,
+    "text": "And then it comes out of the condenser coil",
+    "timestamp_label": "1:52"
+  },
+  {
+    "start": 115.16,
+    "end": 118.44,
+    "text": "as a high pressure, high temperature, liquid refrigerant.",
+    "timestamp_label": "1:55"
+  },
+  {
+    "start": 118.44,
+    "end": 120.91999999999999,
+    "text": "So this is going to be sub-cooled refrigerant",
+    "timestamp_label": "1:58"
+  },
+  {
+    "start": 120.91999999999999,
+    "end": 124.11999999999999,
+    "text": "because it's going to allow the refrigerant",
+    "timestamp_label": "2:00"
+  },
+  {
+    "start": 124.11999999999999,
+    "end": 126.6,
+    "text": "to lower in temperature between here and here.",
+    "timestamp_label": "2:04"
+  },
+  {
+    "start": 126.6,
+    "end": 128.35999999999999,
+    "text": "So it's going to be sub-cooled liquid.",
+    "timestamp_label": "2:06"
+  },
+  {
+    "start": 128.35999999999999,
+    "end": 130.0,
+    "text": "Fully in the liquid state as it travels",
+    "timestamp_label": "2:08"
+  },
+  {
+    "start": 130.0,
+    "end": 131.4,
+    "text": "through the liquid line surface valve,",
+    "timestamp_label": "2:10"
+  },
+  {
+    "start": 131.4,
+    "end": 133.88,
+    "text": "as it travels through the filter dryer.",
+    "timestamp_label": "2:11"
+  },
+  {
+    "start": 133.88,
+    "end": 139.04,
+    "text": "And so the filter dryer's job is to absorb any water vapor",
+    "timestamp_label": "2:13"
+  },
+  {
+    "start": 139.04,
+    "end": 141.84,
+    "text": "in the system and it's trying to collect that and store that",
+    "timestamp_label": "2:19"
+  },
+  {
+    "start": 141.84,
+    "end": 145.48,
+    "text": "so that the water vapor in the system does not",
+    "timestamp_label": "2:21"
+  },
+  {
+    "start": 145.48,
+    "end": 147.84,
+    "text": "mix with the refrigerant oil, which could damage",
+    "timestamp_label": "2:25"
+  },
+  {
+    "start": 147.84,
+    "end": 149.8,
+    "text": "the compressor electrical windings.",
+    "timestamp_label": "2:27"
+  },
+  {
+    "start": 149.8,
+    "end": 152.12,
+    "text": "So you got to think about that refrigerant oil",
+    "timestamp_label": "2:29"
+  },
+  {
+    "start": 152.12,
+    "end": 154.88,
+    "text": "are traveling through any refrigeration system.",
+    "timestamp_label": "2:32"
+  },
+  {
+    "start": 154.88,
+    "end": 157.4,
+    "text": "That compressor is hermetically sealed.",
+    "timestamp_label": "2:34"
+  },
+  {
+    "start": 157.4,
+    "end": 160.28,
+    "text": "And so there's an electrical motor on the inside of there",
+    "timestamp_label": "2:37"
+  },
+  {
+    "start": 160.28,
+    "end": 163.76,
+    "text": "with electrical windings that are exposed to the refrigerant",
+    "timestamp_label": "2:40"
+  },
+  {
+    "start": 163.76,
+    "end": 168.44,
+    "text": "because the refrigerant's job is not only to do this whole loop,",
+    "timestamp_label": "2:43"
+  },
+  {
+    "start": 168.44,
+    "end": 171.96,
+    "text": "but it's to also lower the temperature of the motor inside.",
+    "timestamp_label": "2:48"
+  },
+  {
+    "start": 171.96,
+    "end": 174.35999999999999,
+    "text": "It's to cool the motor.",
+    "timestamp_label": "2:51"
+  },
+  {
+    "start": 174.35999999999999,
+    "end": 176.92,
+    "text": "And so you can take a pressure reading right here",
+    "timestamp_label": "2:54"
+  },
+  {
+    "start": 176.92,
+    "end": 178.0,
+    "text": "at this surface valve.",
+    "timestamp_label": "2:56"
+  },
+  {
+    "start": 178.0,
+    "end": 182.52,
+    "text": "You can also shut down this surface valve up here at the top.",
+    "timestamp_label": "2:58"
+  },
+  {
+    "start": 182.52,
+    "end": 185.56,
+    "text": "The filter dryer is just to trap any moisture",
+    "timestamp_label": "3:02"
+  },
+  {
+    "start": 185.56,
+    "end": 187.8,
+    "text": "but it has a limited capacity.",
+    "timestamp_label": "3:05"
+  },
+  {
+    "start": 187.8,
+    "end": 190.52,
+    "text": "So basically you have sub-cooled liquid traveling through here.",
+    "timestamp_label": "3:07"
+  },
+  {
+    "start": 190.52,
+    "end": 192.76,
+    "text": "It remains unchanged.",
+    "timestamp_label": "3:10"
+  },
+  {
+    "start": 192.76,
+    "end": 195.92,
+    "text": "So then you have the refrigerant entering",
+    "timestamp_label": "3:12"
+  },
+  {
+    "start": 195.92,
+    "end": 197.84,
+    "text": "into the metering device.",
+    "timestamp_label": "3:15"
+  },
+  {
+    "start": 197.84,
+    "end": 200.44,
+    "text": "So it's a high pressure high temperature sub-cooled liquid",
+    "timestamp_label": "3:17"
+  },
+  {
+    "start": 200.44,
+    "end": 201.52,
+    "text": "or fredger entering.",
+    "timestamp_label": "3:20"
+  },
+  {
+    "start": 201.52,
+    "end": 203.76,
+    "text": "The refrigerator is forced to go into the inside",
+    "timestamp_label": "3:21"
+  },
+  {
+    "start": 203.76,
+    "end": 205.84,
+    "text": "of the piston metering device.",
+    "timestamp_label": "3:23"
+  },
+  {
+    "start": 205.84,
+    "end": 208.2,
+    "text": "And then it's going to lower in pressure.",
+    "timestamp_label": "3:25"
+  },
+  {
+    "start": 208.2,
+    "end": 212.56,
+    "text": "So then it's going to be in the low pressure liquid state.",
+    "timestamp_label": "3:28"
+  },
+  {
+    "start": 212.56,
+    "end": 215.36,
+    "text": "But really, as you can see, there's a little bit of light blue",
+    "timestamp_label": "3:32"
+  },
+  {
+    "start": 215.36,
+    "end": 215.96,
+    "text": "at the top.",
+    "timestamp_label": "3:35"
+  },
+  {
+    "start": 215.96,
+    "end": 219.28,
+    "text": "That is your little bit of vapor refrigerant.",
+    "timestamp_label": "3:35"
+  },
+  {
+    "start": 219.28,
+    "end": 221.92000000000002,
+    "text": "So what's happening is you're reducing the pressure",
+    "timestamp_label": "3:39"
+  },
+  {
+    "start": 221.92000000000002,
+    "end": 225.88,
+    "text": "so much that the refrigerant has a chance to expand.",
+    "timestamp_label": "3:41"
+  },
+  {
+    "start": 225.88,
+    "end": 229.28,
+    "text": "And so you have 80% liquid, 20% flash gas.",
+    "timestamp_label": "3:45"
+  },
+  {
+    "start": 229.28,
+    "end": 231.07999999999998,
+    "text": "As the refrigerator enters into the coil,",
+    "timestamp_label": "3:49"
+  },
+  {
+    "start": 231.07999999999998,
+    "end": 232.48,
+    "text": "it's already saturated.",
+    "timestamp_label": "3:51"
+  },
+  {
+    "start": 232.48,
+    "end": 236.28,
+    "text": "And saturated means liquid and vapor both exist at the same time.",
+    "timestamp_label": "3:52"
+  },
+  {
+    "start": 236.28,
+    "end": 238.79999999999998,
+    "text": "Anytime the refrigerator is saturated,",
+    "timestamp_label": "3:56"
+  },
+  {
+    "start": 238.79999999999998,
+    "end": 241.2,
+    "text": "you have a phase change occurring.",
+    "timestamp_label": "3:58"
+  },
+  {
+    "start": 241.2,
+    "end": 243.6,
+    "text": "And the phase change is the big secret",
+    "timestamp_label": "4:01"
+  },
+  {
+    "start": 243.6,
+    "end": 246.96,
+    "text": "to allowing the refrigerant to absorb heat energy",
+    "timestamp_label": "4:03"
+  },
+  {
+    "start": 246.96,
+    "end": 249.4,
+    "text": "from the air crossing the coil.",
+    "timestamp_label": "4:06"
+  },
+  {
+    "start": 249.4,
+    "end": 252.48,
+    "text": "And that is because anytime that the refrigerator is saturated",
+    "timestamp_label": "4:09"
+  },
+  {
+    "start": 252.48,
+    "end": 254.68,
+    "text": "where liquid and vapor exist, it's always",
+    "timestamp_label": "4:12"
+  },
+  {
+    "start": 254.68,
+    "end": 258.2,
+    "text": "the same temperature as it travels through the coil",
+    "timestamp_label": "4:14"
+  },
+  {
+    "start": 258.2,
+    "end": 261.12,
+    "text": "until, in this case, it becomes a vapor state,",
+    "timestamp_label": "4:18"
+  },
+  {
+    "start": 261.12,
+    "end": 262.6,
+    "text": "in the fully vapor state.",
+    "timestamp_label": "4:21"
+  },
+  {
+    "start": 262.6,
+    "end": 266.12,
+    "text": "Once it becomes vapor, it can then increase in temperature",
+    "timestamp_label": "4:22"
+  },
+  {
+    "start": 266.12,
+    "end": 268.96000000000004,
+    "text": "as the hot air is blowing across the coil.",
+    "timestamp_label": "4:26"
+  },
+  {
+    "start": 268.96000000000004,
+    "end": 270.28000000000003,
+    "text": "It's going to, the refrigerator is going to absorb",
+    "timestamp_label": "4:28"
+  },
+  {
+    "start": 270.28000000000003,
+    "end": 274.12,
+    "text": "heat energy, a low pressure low temperature vapor refrigerant",
+    "timestamp_label": "4:30"
+  },
+  {
+    "start": 274.12,
+    "end": 276.36,
+    "text": "exiting the indoor evaporator coil.",
+    "timestamp_label": "4:34"
+  },
+  {
+    "start": 276.36,
+    "end": 278.6,
+    "text": "And then you have the low pressure low temperature vapor",
+    "timestamp_label": "4:36"
+  },
+  {
+    "start": 278.6,
+    "end": 281.28000000000003,
+    "text": "refrigerant re-entering into the compressor.",
+    "timestamp_label": "4:38"
+  },
+  {
+    "start": 281.28000000000003,
+    "end": 283.84000000000003,
+    "text": "And then the cycle starts all over again.",
+    "timestamp_label": "4:41"
+  },
+  {
+    "start": 283.84,
+    "end": 285.79999999999995,
+    "text": "It's also important to make sure that you also",
+    "timestamp_label": "4:43"
+  },
+  {
+    "start": 285.79999999999995,
+    "end": 288.59999999999997,
+    "text": "have vapor refrigerant entering in order",
+    "timestamp_label": "4:45"
+  },
+  {
+    "start": 288.59999999999997,
+    "end": 290.32,
+    "text": "to have vapor refrigerant exiting.",
+    "timestamp_label": "4:48"
+  },
+  {
+    "start": 290.32,
+    "end": 292.08,
+    "text": "So you got to remember that that compressor",
+    "timestamp_label": "4:50"
+  },
+  {
+    "start": 292.08,
+    "end": 293.96,
+    "text": "is a vapor compressor.",
+    "timestamp_label": "4:52"
+  },
+  {
+    "start": 293.96,
+    "end": 296.88,
+    "text": "You shouldn't have saturated refrigerant entering",
+    "timestamp_label": "4:53"
+  },
+  {
+    "start": 296.88,
+    "end": 297.84,
+    "text": "into that compressor.",
+    "timestamp_label": "4:56"
+  },
+  {
+    "start": 297.84,
+    "end": 300.15999999999997,
+    "text": "Saturated means there was going to be a little bit of liquid",
+    "timestamp_label": "4:57"
+  },
+  {
+    "start": 300.15999999999997,
+    "end": 301.0,
+    "text": "in the refrigerator, right?",
+    "timestamp_label": "5:00"
+  },
+  {
+    "start": 301.0,
+    "end": 303.03999999999996,
+    "text": "That would damage the compressor.",
+    "timestamp_label": "5:01"
+  },
+  {
+    "start": 303.03999999999996,
+    "end": 306.32,
+    "text": "So if that indoor blower motor was broken,",
+    "timestamp_label": "5:03"
+  },
+  {
+    "start": 306.32,
+    "end": 308.0,
+    "text": "maybe the capacitor was bad or whatever,",
+    "timestamp_label": "5:06"
+  },
+  {
+    "start": 308.0,
+    "end": 310.67999999999995,
+    "text": "the blower motor stopped working, that refrigerant's not",
+    "timestamp_label": "5:08"
+  },
+  {
+    "start": 310.67999999999995,
+    "end": 312.47999999999996,
+    "text": "going to be able to absorb any heat energy",
+    "timestamp_label": "5:10"
+  },
+  {
+    "start": 312.48,
+    "end": 314.40000000000003,
+    "text": "at that indoor coil.",
+    "timestamp_label": "5:12"
+  },
+  {
+    "start": 314.40000000000003,
+    "end": 316.72,
+    "text": "And so you're still going to have saturated refrigerant entering",
+    "timestamp_label": "5:14"
+  },
+  {
+    "start": 316.72,
+    "end": 317.56,
+    "text": "into that compressor.",
+    "timestamp_label": "5:16"
+  },
+  {
+    "start": 317.56,
+    "end": 319.36,
+    "text": "And that's going to damage the compressor.",
+    "timestamp_label": "5:17"
+  },
+  {
+    "start": 319.36,
+    "end": 321.28000000000003,
+    "text": "That's the basic refrigeration cycle.",
+    "timestamp_label": "5:19"
+  },
+  {
+    "start": 321.28000000000003,
+    "end": 323.28000000000003,
+    "text": "If you want to learn more, make sure to check out some of the",
+    "timestamp_label": "5:21"
+  },
+  {
+    "start": 323.28000000000003,
+    "end": 326.56,
+    "text": "resources we have over to our website at acservestake.com.",
+    "timestamp_label": "5:23"
+  },
+  {
+    "start": 326.56,
+    "end": 328.0,
+    "text": "We also have our refrigerant charging",
+    "timestamp_label": "5:26"
+  },
+  {
+    "start": 328.0,
+    "end": 329.76,
+    "text": "and service procedures for air conditioning books.",
+    "timestamp_label": "5:28"
+  },
+  {
+    "start": 329.76,
+    "end": 332.12,
+    "text": "So this is everything I want you to know about air conditioning",
+    "timestamp_label": "5:29"
+  },
+  {
+    "start": 332.12,
+    "end": 334.14000000000004,
+    "text": "systems and preparing a system for refrigerant,",
+    "timestamp_label": "5:32"
+  },
+  {
+    "start": 334.14000000000004,
+    "end": 337.44,
+    "text": "checking the charge, and also troubleshooting a system.",
+    "timestamp_label": "5:34"
+  },
+  {
+    "start": 337.44,
+    "end": 339.88,
+    "text": "And then we also have our 1000 question workbook.",
+    "timestamp_label": "5:37"
+  },
+  {
+    "start": 339.88,
+    "end": 341.88,
+    "text": "And so this has a self-study guide.",
+    "timestamp_label": "5:39"
+  },
+  {
+    "start": 341.88,
+    "end": 345.15999999999997,
+    "text": "So you can check your own answers in order to see,",
+    "timestamp_label": "5:41"
+  },
+  {
+    "start": 345.15999999999997,
+    "end": 346.48,
+    "text": "if you're retaining the information,",
+    "timestamp_label": "5:45"
+  },
+  {
+    "start": 346.48,
+    "end": 348.36,
+    "text": "there's 1,000 questions in this.",
+    "timestamp_label": "5:46"
+  },
+  {
+    "start": 348.36,
+    "end": 350.2,
+    "text": "And then we also have quick reference cards",
+    "timestamp_label": "5:48"
+  },
+  {
+    "start": 350.2,
+    "end": 352.6,
+    "text": "and we have refrigerant weights on these PT charts.",
+    "timestamp_label": "5:50"
+  },
+  {
+    "start": 352.6,
+    "end": 357.36,
+    "text": "We have the checking the charge methods of total superheat",
+    "timestamp_label": "5:52"
+  },
+  {
+    "start": 357.36,
+    "end": 358.44,
+    "text": "and subcooling.",
+    "timestamp_label": "5:57"
+  },
+  {
+    "start": 358.44,
+    "end": 360.92,
+    "text": "We've got the step-by-step directions on here.",
+    "timestamp_label": "5:58"
+  },
+  {
+    "start": 360.92,
+    "end": 362.8,
+    "text": "So make sure to check all this out over to website",
+    "timestamp_label": "6:00"
+  },
+  {
+    "start": 362.8,
+    "end": 364.64,
+    "text": "at acservestake.com.",
+    "timestamp_label": "6:02"
+  },
+  {
+    "start": 364.64,
+    "end": 367.4,
+    "text": "And we also have these resources available over on Amazon.",
+    "timestamp_label": "6:04"
+  },
+  {
+    "start": 367.4,
+    "end": 369.04,
+    "text": "So you can read the reviews there.",
+    "timestamp_label": "6:07"
+  },
+  {
+    "start": 369.04,
+    "end": 369.84,
+    "text": "Hope you enjoyed yourself.",
+    "timestamp_label": "6:09"
+  },
+  {
+    "start": 369.84,
+    "end": 371.84,
+    "text": "We'll see you next time at AC Service Tech Channel.",
+    "timestamp_label": "6:09"
+  }
+]

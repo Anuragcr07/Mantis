@@ -1,0 +1,264 @@
+{
+  "products": {
+    "ac_general": {
+      "name": "Air Conditioner",
+      "symptoms": [
+        {
+          "symptom": "AC not cooling",
+          "follow_up_questions": [
+            "Is the AC turning on at all?",
+            "Is the fan running but no cold air coming out?",
+            "Have you checked if the temperature is set correctly?",
+            "When did you last clean or replace the air filter?"
+          ],
+          "causes": [
+            {
+              "cause": "Dirty or clogged air filter",
+              "probability": "high",
+              "fix": "Clean or replace the air filter. A clogged filter blocks airflow and reduces cooling efficiency significantly.",
+              "source": { "type": "pdf", "page": 12, "section": "Filter Maintenance" }
+            },
+            {
+              "cause": "Low refrigerant level",
+              "probability": "medium",
+              "fix": "Low refrigerant usually means a leak. Contact a certified technician to inspect and recharge refrigerant.",
+              "source": { "type": "pdf", "page": 28, "section": "Refrigerant System" }
+            },
+            {
+              "cause": "Dirty condenser coils",
+              "probability": "medium",
+              "fix": "Clean the outdoor condenser unit. Remove debris, leaves, and dust blocking the coils.",
+              "source": { "type": "pdf", "page": 15, "section": "Condenser Maintenance" }
+            },
+            {
+              "cause": "Thermostat set incorrectly",
+              "probability": "low",
+              "fix": "Ensure thermostat is set to COOL mode and temperature is below current room temperature.",
+              "source": { "type": "pdf", "page": 8, "section": "Thermostat Settings" }
+            }
+          ]
+        },
+        {
+          "symptom": "AC not turning on",
+          "follow_up_questions": [
+            "Is the power LED on the unit lit?",
+            "Have you checked the circuit breaker?",
+            "Is the remote control working (try replacing batteries)?",
+            "Did the unit turn off suddenly or never turned on?"
+          ],
+          "causes": [
+            {
+              "cause": "Tripped circuit breaker",
+              "probability": "high",
+              "fix": "Check your home electrical panel. Reset the breaker for the AC circuit if it has tripped.",
+              "source": { "type": "pdf", "page": 6, "section": "Electrical Requirements" }
+            },
+            {
+              "cause": "Dead remote control batteries",
+              "probability": "high",
+              "fix": "Replace the remote control batteries with fresh AA batteries and try again.",
+              "source": { "type": "pdf", "page": 10, "section": "Remote Control" }
+            },
+            {
+              "cause": "Faulty power cable or loose connection",
+              "probability": "medium",
+              "fix": "Check that the power cable is firmly plugged in. Inspect for any visible damage to the cord.",
+              "source": { "type": "pdf", "page": 7, "section": "Installation" }
+            },
+            {
+              "cause": "Internal protection mode triggered",
+              "probability": "medium",
+              "fix": "Unit may have shut down due to overheating or voltage fluctuation. Turn off power for 30 minutes and restart.",
+              "source": { "type": "pdf", "page": 22, "section": "Protection Features" }
+            }
+          ]
+        },
+        {
+          "symptom": "AC making loud noise",
+          "follow_up_questions": [
+            "Is the noise coming from the indoor or outdoor unit?",
+            "Does the noise sound like rattling, buzzing, or squealing?",
+            "Did the noise start suddenly or gradually?",
+            "Is the noise constant or only when compressor kicks in?"
+          ],
+          "causes": [
+            {
+              "cause": "Loose or broken fan blade",
+              "probability": "high",
+              "fix": "Turn off the unit immediately. A loose fan blade can cause rattling. Contact a technician to inspect the fan assembly.",
+              "source": { "type": "pdf", "page": 31, "section": "Fan Assembly" }
+            },
+            {
+              "cause": "Debris inside the outdoor unit",
+              "probability": "high",
+              "fix": "Turn off the unit and carefully remove any leaves, twigs, or debris from inside the outdoor condenser unit.",
+              "source": { "type": "pdf", "page": 15, "section": "Outdoor Unit Maintenance" }
+            },
+            {
+              "cause": "Loose panels or screws",
+              "probability": "medium",
+              "fix": "Inspect and tighten all accessible screws on the indoor and outdoor unit panels.",
+              "source": { "type": "pdf", "page": 33, "section": "General Maintenance" }
+            }
+          ]
+        },
+        {
+          "symptom": "AC leaking water",
+          "follow_up_questions": [
+            "Is water dripping from the indoor unit or outdoor unit?",
+            "Is the water leak constant or only when AC is running?",
+            "Have you cleaned the drain pipe recently?",
+            "Is there ice forming on the unit?"
+          ],
+          "causes": [
+            {
+              "cause": "Blocked drain pipe",
+              "probability": "high",
+              "fix": "Clean the condensate drain pipe. Use a wet-dry vacuum or a thin brush to remove blockage from the drain outlet.",
+              "source": { "type": "pdf", "page": 18, "section": "Drainage System" }
+            },
+            {
+              "cause": "Frozen evaporator coil thawing",
+              "probability": "medium",
+              "fix": "Turn off cooling mode and run fan only for 2 hours to thaw the coil. Check filter and airflow after thawing.",
+              "source": { "type": "pdf", "page": 26, "section": "Evaporator Coil" }
+            },
+            {
+              "cause": "Improper installation angle",
+              "probability": "low",
+              "fix": "The indoor unit should tilt slightly backward for proper drainage. Contact installer to re-check mounting angle.",
+              "source": { "type": "pdf", "page": 9, "section": "Installation Requirements" }
+            }
+          ]
+        }
+      ]
+    },
+    "washing_machine_general": {
+      "name": "Washing Machine",
+      "symptoms": [
+        {
+          "symptom": "Washing machine not starting",
+          "follow_up_questions": [
+            "Is the power light on?",
+            "Is the door or lid properly closed?",
+            "Have you selected a wash cycle?",
+            "Is the water supply turned on?"
+          ],
+          "causes": [
+            {
+              "cause": "Door or lid not properly closed",
+              "probability": "high",
+              "fix": "Ensure the door is firmly shut until you hear a click. The machine will not start if the door latch is not engaged.",
+              "source": { "type": "pdf", "page": 11, "section": "Door Safety Lock" }
+            },
+            {
+              "cause": "Water supply valve closed",
+              "probability": "high",
+              "fix": "Check that the water inlet valve at the back of the machine is fully open. Also check the household water supply.",
+              "source": { "type": "pdf", "page": 8, "section": "Water Supply" }
+            },
+            {
+              "cause": "Tripped circuit breaker",
+              "probability": "medium",
+              "fix": "Check your electrical panel and reset the breaker for the washing machine circuit.",
+              "source": { "type": "pdf", "page": 6, "section": "Electrical Setup" }
+            },
+            {
+              "cause": "Control board fault",
+              "probability": "low",
+              "fix": "Unplug the machine for 5 minutes and plug back in to reset the control board. If issue persists contact service.",
+              "source": { "type": "pdf", "page": 35, "section": "Error Codes" }
+            }
+          ]
+        },
+        {
+          "symptom": "Washing machine not draining",
+          "follow_up_questions": [
+            "Is water still sitting in the drum after the cycle?",
+            "Can you hear the drain pump running?",
+            "Have you checked the drain hose for kinks?",
+            "When did you last clean the pump filter?"
+          ],
+          "causes": [
+            {
+              "cause": "Clogged pump filter",
+              "probability": "high",
+              "fix": "Locate the pump filter at the front bottom panel. Place a towel down, unscrew and clean the filter of lint and debris.",
+              "source": { "type": "pdf", "page": 22, "section": "Pump Filter Cleaning" }
+            },
+            {
+              "cause": "Kinked or blocked drain hose",
+              "probability": "high",
+              "fix": "Check the drain hose at the back for kinks or bends. Ensure the hose end is not pushed too far into the standpipe.",
+              "source": { "type": "pdf", "page": 14, "section": "Drain Hose Installation" }
+            },
+            {
+              "cause": "Faulty drain pump",
+              "probability": "medium",
+              "fix": "If the pump is silent during drain cycle it may be faulty. Contact a technician to test and replace the drain pump.",
+              "source": { "type": "pdf", "page": 38, "section": "Pump Assembly" }
+            }
+          ]
+        },
+        {
+          "symptom": "Washing machine vibrating excessively",
+          "follow_up_questions": [
+            "Is the machine on a level surface?",
+            "Were the transit bolts removed during installation?",
+            "Is the load balanced inside the drum?",
+            "Does vibration happen throughout the cycle or only during spin?"
+          ],
+          "causes": [
+            {
+              "cause": "Transit bolts not removed",
+              "probability": "high",
+              "fix": "Transit bolts must be removed before first use. Check the back panel for 3-4 bolts and remove them using a spanner.",
+              "source": { "type": "pdf", "page": 5, "section": "Installation — Transit Bolts" }
+            },
+            {
+              "cause": "Uneven or unlevel floor",
+              "probability": "high",
+              "fix": "Adjust the levelling feet at the bottom of the machine until it sits firmly without rocking. Use a spirit level to verify.",
+              "source": { "type": "pdf", "page": 7, "section": "Levelling the Machine" }
+            },
+            {
+              "cause": "Unbalanced laundry load",
+              "probability": "medium",
+              "fix": "Open the door and redistribute clothes evenly around the drum. Avoid washing single heavy items alone.",
+              "source": { "type": "pdf", "page": 16, "section": "Loading Guidelines" }
+            }
+          ]
+        },
+        {
+          "symptom": "Washing machine showing error code",
+          "follow_up_questions": [
+            "What is the exact error code shown on the display?",
+            "Did the error appear at the start, mid-cycle, or end of cycle?",
+            "Has this error appeared before?",
+            "Did you recently change detergent or load size?"
+          ],
+          "causes": [
+            {
+              "cause": "E1 / F1 — Water inlet error",
+              "probability": "high",
+              "fix": "Check water supply valve is open. Clean the inlet filter mesh at the back of the machine where the hose connects.",
+              "source": { "type": "pdf", "page": 36, "section": "Error Code E1" }
+            },
+            {
+              "cause": "E3 / F5 — Door lock error",
+              "probability": "high",
+              "fix": "Ensure door is fully closed. If error persists after closing the door latch mechanism may need replacement.",
+              "source": { "type": "pdf", "page": 37, "section": "Error Code E3" }
+            },
+            {
+              "cause": "E4 / F8 — Drainage error",
+              "probability": "medium",
+              "fix": "Clean the pump filter and check drain hose. Run a drain-only cycle to clear blockage.",
+              "source": { "type": "pdf", "page": 37, "section": "Error Code E4" }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

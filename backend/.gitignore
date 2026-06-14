@@ -1,0 +1,5 @@
+.env
+uploads/
+maintenance_db/
+__pycache__/
+*.pyc
