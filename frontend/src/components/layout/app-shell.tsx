@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Activity, ArrowLeft, RotateCcw } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { Activity, ArrowLeft, RotateCcw, Loader2, ShieldCheck } from "lucide-react";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { DiagnosticPanel } from "@/components/diagnostics/diagnostic-panel";
 import { ProductSidebar } from "./product-sidebar";
-import {
-  HORN_SCENARIO,
-  INITIAL_DIAGNOSTIC_STATE,
-  INITIAL_MESSAGES,
-  PRODUCTS,
-} from "@/lib/mock-data";
-import { Attachment, ChatMessage, Product } from "@/lib/types";
+import { INITIAL_DIAGNOSTIC_STATE, INITIAL_MESSAGES, PRODUCTS } from "@/lib/mock-data";
+import { Attachment, ChatMessage, Product, DiagnosticState } from "@/lib/types";
 
 function nowTime() {
   return new Intl.DateTimeFormat("en-US", {
@@ -22,38 +17,48 @@ function nowTime() {
 }
 
 interface AppShellProps {
-  onBack?: () => void; // Essential for Customer Garage integration
+  onBack?: () => void;
+  activeUnit?: any; 
+  registeredUnits?: any[]; 
 }
 
-export function AppShell({ onBack }: AppShellProps) {
+export function AppShell({ onBack, activeUnit, registeredUnits = [] }: AppShellProps) {
   // --- STATE ---
-  const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
-  const [diagnostic, setDiagnostic] = useState(INITIAL_DIAGNOSTIC_STATE);
+  const [diagnostic, setDiagnostic] = useState<DiagnosticState>(INITIAL_DIAGNOSTIC_STATE);
   const [awaitingReply, setAwaitingReply] = useState(false);
   const [diagnosticVisible, setDiagnosticVisible] = useState(true);
-  const [scenarioIndex, setScenarioIndex] = useState(0);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [escalated, setEscalated] = useState(false);
 
-  // --- LOGIC ---
-  const pushAssistantMessage = (text: string, quickReplies?: string[]) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `assistant-${Date.now()}`,
-        sender: "assistant",
-        text,
-        time: nowTime(),
-        quickReplies,
-      },
-    ]);
+  // --- SYNC PRODUCT CONTEXT ---
+  useEffect(() => {
+    if (activeUnit) {
+      handleSwitchProduct(activeUnit);
+    }
+  }, [activeUnit]);
+
+  // Helper to switch context cleanly
+  const handleSwitchProduct = (unit: any) => {
+    const productContext: Product = {
+      id: unit.productId || "ac", 
+      name: unit.productName,
+      category: unit.category,
+      icon: unit.iconName || "Cpu",
+      lastService: unit.lastServiceDate,
+      nextService: "Scheduled"
+    };
+    setSelectedProduct(productContext);
+    handleReset(); // Clear old chat and history
   };
 
-  const handleSend = (text: string, attachments: Attachment[]) => {
+  // --- API HANDLER ---
+  const handleSend = async (text: string, attachments: Attachment[]) => {
     if (!text && attachments.length === 0) return;
-    if (awaitingReply) return;
+    if (awaitingReply || !selectedProduct) return;
 
-    // 1. Add User Message
+    // 1. Add User Msg
     setMessages((prev) => [
       ...prev,
       {
@@ -67,136 +72,169 @@ export function AppShell({ onBack }: AppShellProps) {
 
     setAwaitingReply(true);
 
-    // 2. Simulate AI "Thinking" and advancing the scripted scenario
-    window.setTimeout(() => {
-      const stepToPlay = Math.min(scenarioIndex, HORN_SCENARIO.length - 1);
-      const nextStep = HORN_SCENARIO[stepToPlay];
-
-      pushAssistantMessage(nextStep.assistantText, nextStep.quickReplies);
+    try {
+      const formData = new FormData();
+      formData.append("query", text);
+      formData.append("user_id", "alex_01");
       
-      // Update the Diagnostic Panel (Gauge, Causes, etc)
-      setDiagnostic((prev) => ({ 
-        ...prev, 
-        ...nextStep.diagnosticPatch,
-        status: scenarioIndex >= HORN_SCENARIO.length - 1 ? "resolved" : "diagnosing"
+      if (conversationId) formData.append("conversation_id", conversationId);
+      
+      if (attachments.length > 0 && attachments[0].file) {
+        formData.append("image", attachments[0].file);
+      }
+
+      const res = await fetch(`http://localhost:8000/chat/${selectedProduct.id}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Offline");
+      
+      const data = await res.json();
+
+      if (data.conversation_id) setConversationId(data.conversation_id);
+      
+      // Use 'answer' as identified in your backend JSON logs
+      const aiResponseText = data.answer || data.response || "Inference complete.";
+      
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `assistant-${Date.now()}`,
+          sender: "assistant",
+          text: aiResponseText,
+          time: nowTime(),
+          quickReplies: data.quick_replies,
+        },
+      ]);
+      
+      setDiagnostic((prev) => ({
+          ...prev,
+          confidence: Math.min(prev.confidence + 18, 98),
+          status: "diagnosing",
+          symptom: text.length > 20 ? text.substring(0, 20) + "..." : text,
+          sources: data.sources && data.sources.length > 0 ? data.sources : prev.sources
       }));
 
-      setScenarioIndex((prev) => prev + 1);
+    } catch (err) {
+      setMessages((prev) => [...prev, {
+        id: 'err', sender: 'assistant', time: nowTime(),
+        text: "🚨 BACKEND_ERROR: AI Model on port 8000 is unreachable."
+      }]);
+    } finally {
       setAwaitingReply(false);
-    }, 800);
-  };
-
-  const handleQuickReply = (reply: string) => {
-    handleSend(reply, []);
+    }
   };
 
   const handleReset = () => {
     setMessages(INITIAL_MESSAGES);
     setDiagnostic(INITIAL_DIAGNOSTIC_STATE);
+    setConversationId(null);
     setAwaitingReply(false);
-    setScenarioIndex(0);
     setEscalated(false);
   };
 
   const handleEscalate = () => {
     setEscalated(true);
     setDiagnostic((prev) => ({ ...prev, status: "escalated" }));
-    pushAssistantMessage(
-      "I've shared your diagnostic data with a Philix technician. They will review the relay and fuse results before contacting you.",
-      []
-    );
+    setMessages((prev) => [...prev, {
+        id: `esc-${Date.now()}`,
+        sender: "assistant",
+        text: "UNIT_ESCALATED: A Philix engineer has been notified. Ticket #TQ-091 assigned.",
+        time: nowTime()
+    }]);
   };
 
-  // Ensure diagnostics are visible when a session starts
-  useEffect(() => {
-    if (!diagnosticVisible) setDiagnosticVisible(true);
-  }, [selectedProduct]);
+  if (!selectedProduct) {
+      return (
+        <div className="h-full flex items-center justify-center bg-canvas text-text-faint font-mono animate-pulse">
+            BOOTING_DIAGNOSTIC_KERNEL...
+        </div>
+      )
+  }
 
   return (
     <div className="flex h-full flex-col bg-canvas text-text relative overflow-hidden">
-      {/* 1. TOP NAV / HEADER (Internal AppShell) */}
-      <div className="flex items-center justify-between px-6 py-2 border-b border-line bg-surface/30 lg:hidden">
+      
+      {/* MOBILE NAV */}
+      <div className="flex items-center justify-between px-6 py-3 border-b border-line bg-surface/30 lg:hidden shrink-0">
         {onBack && (
-          <button 
-            onClick={onBack} 
-            className="flex items-center gap-2 text-xs text-text-muted hover:text-text font-medium"
-          >
-            <ArrowLeft size={14} /> Back to Garage
+          <button onClick={onBack} className="flex items-center gap-2 text-xs text-text-muted hover:text-signal transition-colors font-mono">
+            <ArrowLeft size={14} /> EXIT
           </button>
         )}
-        <div className="text-[10px] font-mono text-signal uppercase tracking-widest">
-          Active_Diagnostic_Session
+        <div className="flex items-center gap-2 font-mono text-[10px] text-signal uppercase">
+            <div className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse" />
+            Live_Inference
         </div>
       </div>
 
-      <main className="grid flex-1 grid-cols-1 gap-0 overflow-hidden lg:grid-cols-[280px_1fr_380px]">
+      <main className="grid flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[280px_1fr_380px]">
         
-        {/* 2. SIDEBAR: Product Info & Maintenance */}
+        {/* SIDEBAR: Implementing Switching Logic */}
         <div className="hidden border-r border-line lg:block bg-surface/20">
           <ProductSidebar
-            products={PRODUCTS}
+            products={registeredUnits.length > 0 ? registeredUnits : PRODUCTS}
             selected={selectedProduct}
-            onSelect={(p) => {
-              setSelectedProduct(p);
-              handleReset();
-            }}
+            onSelect={(unit: any) => handleSwitchProduct(unit)}
             onReset={handleReset}
           />
         </div>
 
-        {/* 3. CHAT PANEL: The Main Interaction */}
-        <div className="flex flex-col min-w-0 bg-canvas">
+        {/* CHAT PANEL */}
+        <div className="flex flex-col min-w-0 bg-canvas relative overflow-hidden border-r border-line/30">
           <ChatPanel
             product={selectedProduct}
             messages={messages}
             onSend={handleSend}
-            onQuickReply={handleQuickReply}
+            onQuickReply={(reply: string) => handleSend(reply, [])}
             awaitingReply={awaitingReply}
             onToggleDiagnostics={() => setDiagnosticVisible((prev) => !prev)}
           />
         </div>
 
-        {/* 4. DIAGNOSTIC PANEL: The Visual Expert (Gauge, Causes, Sources) */}
+        {/* DIAGNOSTIC PANEL */}
         {diagnosticVisible && (
-          <div className="hidden h-full flex-col border-l border-line bg-surface/10 lg:flex overflow-y-auto">
-            {/* Desktop Exit/Back Button */}
-            {onBack && (
-              <div className="px-6 pt-4">
+          <div className="hidden h-full flex-col border-l border-line bg-surface/10 lg:flex overflow-y-auto relative bg-grid">
+            <div className="px-6 pt-6 shrink-0 flex justify-between items-center">
+                {onBack && (
                 <button 
-                  onClick={onBack}
-                  className="group flex items-center gap-2 text-[10px] font-mono text-text-muted hover:text-signal transition-colors"
+                    onClick={onBack}
+                    className="group flex items-center gap-2 text-[10px] font-mono text-text-muted hover:text-signal transition-colors uppercase"
                 >
-                  <ArrowLeft size={10} className="group-hover:-translate-x-1 transition-transform" /> 
-                  RETURN_TO_GARAGE
+                    <ArrowLeft size={10} className="group-hover:-translate-x-1 transition-transform" /> 
+                    Exit_Session
                 </button>
-              </div>
-            )}
+                )}
+                <ShieldCheck size={14} className="text-confirm opacity-40" />
+            </div>
             
-            <DiagnosticPanel
-              diagnostic={diagnostic}
-              onEscalate={handleEscalate}
-              escalated={escalated}
-            />
+            <div className="flex-1">
+                <DiagnosticPanel
+                    diagnostic={diagnostic}
+                    onEscalate={handleEscalate}
+                    escalated={escalated}
+                />
+            </div>
             
-            <div className="mt-auto p-6 border-t border-line">
+            <div className="mt-auto p-6 border-t border-line bg-canvas/40 backdrop-blur-sm">
                <button 
                 onClick={handleReset}
-                className="w-full flex items-center justify-center gap-2 py-2 text-xs text-text-faint hover:text-text transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-line text-[10px] font-bold text-text-faint hover:text-text transition-all bg-surface/50 uppercase tracking-widest"
                >
-                 <RotateCcw size={12} /> Reset Session
+                 <RotateCcw size={12} /> Flush_Context_Buffer
                </button>
             </div>
           </div>
         )}
       </main>
 
-      {/* MOBILE TOGGLE (Show diagnostics if hidden) */}
       {!diagnosticVisible && (
         <button 
           onClick={() => setDiagnosticVisible(true)}
-          className="fixed bottom-24 right-6 lg:hidden bg-signal text-canvas p-3 rounded-full shadow-lg z-50"
+          className="fixed bottom-24 right-6 lg:hidden bg-signal text-canvas p-4 rounded-full shadow-2xl z-50 animate-bounce"
         >
-          <Activity size={20} />
+          <Activity size={24} />
         </button>
       )}
     </div>

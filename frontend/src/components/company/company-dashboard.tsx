@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getPresignedUploadUrl } from "@/app/actions/s3";
 import { 
   Users, Activity, AlertTriangle, FileText, Database, 
-  Upload, Link as LinkIcon, Video, CheckCircle2, Loader2, Globe, Cpu, Plus
+  Upload, Link as LinkIcon, Video, CheckCircle2, Loader2, Globe, Cpu, Plus, WashingMachine
 } from "lucide-react";
 
 export function CompanyDashboard() {
@@ -16,7 +16,6 @@ export function CompanyDashboard() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   
-  // Dynamic Registration State
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("Appliance");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -35,52 +34,59 @@ export function CompanyDashboard() {
     if (!productName) return alert("Please enter a product name.");
     if (!selectedFile && !externalUrl) return alert("Provide training data (File or URL).");
 
+    // 1. Map to backend-compatible IDs: 'ac', 'washing_machine', 'monitor'
+    const getBackendId = () => {
+        const name = productName.toLowerCase();
+        if (name.includes("ac") || name.includes("air")) return "ac";
+        if (name.includes("wash")) return "washing_machine";
+        return "monitor"; // Default fallback
+    };
+
+    const productId = getBackendId();
     setIsUploading(true);
     setUploadSuccess(false);
 
     try {
       let finalDataLocation = externalUrl;
 
-      // STEP 1: UPLOAD TO AWS S3
-      if (selectedFile) {
-        console.log("Initializing S3 Handshake...");
-        const { url, fileKey } = await getPresignedUploadUrl(selectedFile.name, selectedFile.type, "company");
+      // STEP 1: HIT LOCAL FASTAPI FOR MODEL TRAINING (PDF Ingestion)
+      if (selectedFile && selectedFile.type === "application/pdf") {
+        console.log(`🚀 Sending PDF to FastAPI for product: ${productId}`);
         
-        const s3Response = await fetch(url, {
+        const formData = new FormData();
+        formData.append("file", selectedFile); // Backend expects key 'file'
+
+        const fastApiResponse = await fetch(`http://localhost:8000/ingest/pdf/${productId}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!fastApiResponse.ok) throw new Error("FastAPI training failed");
+        console.log("✅ FastAPI Ingestion Complete");
+      }
+
+      // STEP 2: UPLOAD TO AWS S3 (For storage/reference)
+      if (selectedFile) {
+        const { url, fileKey } = await getPresignedUploadUrl(selectedFile.name, selectedFile.type, "company");
+        await fetch(url, {
           method: "PUT",
           body: selectedFile,
           headers: { "Content-Type": selectedFile.type },
         });
-
-        if (!s3Response.ok) throw new Error("S3 Upload Failed");
         finalDataLocation = `s3://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}/${fileKey}`;
       }
 
-      // STEP 2: REGISTER IN MONGODB (This makes it visible to customers)
-      console.log("Registering product in global registry...");
-      const dbResponse = await fetch("/api/products/add", {
+      // STEP 3: REGISTER IN MONGODB (Marketplace Listing)
+      await fetch("/api/products/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: productName,
           category: category,
-          brand: "Philix Electronics", // Assuming current manufacturer session
+          brand: "Philix",
           source_url: finalDataLocation,
-          icon: category === "EV / Scooter" ? "Bike" : category === "Electronics" ? "Cpu" : "Wind"
-        }),
-      });
-
-      if (!dbResponse.ok) throw new Error("Database sync failed");
-
-      // STEP 3: NOTIFY FASTAPI (Trigger AI Training)
-      console.log("Notifying FastAPI Training Node...");
-      await fetch("http://localhost:8000/train", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_name: productName,
-          source_url: finalDataLocation,
-          timestamp: new Date().toISOString()
+          product_id: productId, // Link to backend ID
+          icon: productId === "ac" ? "Wind" : productId === "washing_machine" ? "WashingMachine" : "Cpu"
         }),
       });
 
@@ -91,9 +97,9 @@ export function CompanyDashboard() {
       setExternalUrl("");
       setTimeout(() => setUploadSuccess(false), 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Pipeline Error:", error);
-      alert("Registration Failed. Check console for logs.");
+      alert(`Error: ${error.message}. Ensure FastAPI is running on port 8000.`);
     } finally {
       setIsUploading(false);
     }
@@ -101,32 +107,32 @@ export function CompanyDashboard() {
 
   return (
     <div className="p-8 space-y-8 overflow-y-auto max-w-7xl mx-auto bg-canvas">
-      {/* Dynamic Header */}
+      {/* Header */}
       <div className="flex justify-between items-center bg-surface-2/40 p-6 rounded-3xl border border-line">
         <div>
-            <h1 className="text-3xl font-display font-bold text-text tracking-tight">Manufacturer HQ Dashboard</h1>
-            <p className="text-text-muted text-sm mt-1 uppercase font-mono tracking-widest opacity-60">Session: Philix_Admin_04</p>
+            <h1 className="text-3xl font-display font-bold text-text tracking-tight">Manufacturer HQ</h1>
+            <p className="text-text-muted text-sm mt-1 uppercase font-mono tracking-widest opacity-60">Status: Philix_Primary_Admin</p>
         </div>
-        <Badge variant="outline" className="border-confirm/20 text-confirm bg-confirm/5 font-mono px-4 py-1.5">
-            <Activity size={14} className="mr-2 animate-pulse"/> AI_TRAINER_ONLINE
+        <Badge variant="outline" className="border-confirm/20 text-confirm bg-confirm/5 font-mono px-4 py-1.5 h-fit">
+            <Activity size={14} className="mr-2 animate-pulse"/> AI_ENGINE_LOCAL_PORT_8000
         </Badge>
       </div>
 
-      {/* Analytics */}
+      {/* Analytics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <AnalyticsCard title="Total Fleet" value="1.2M" icon={<Users size={16}/>} />
-        <AnalyticsCard title="RAG Accuracy" value="98.1%" icon={<Activity className="text-confirm" size={16}/>} />
-        <AnalyticsCard title="Open Incidents" value="04" icon={<AlertTriangle className="text-alert" size={16}/>} />
-        <AnalyticsCard title="VDB Storage" value="14.2GB" icon={<Database size={16}/>} />
+        <AnalyticsCard title="Listed Units" value="1,284" icon={<Users size={16}/>} />
+        <AnalyticsCard title="Model Sync" value="98.1%" icon={<Activity className="text-confirm" size={16}/>} />
+        <AnalyticsCard title="Escalations" value="04" icon={<AlertTriangle className="text-alert" size={16}/>} />
+        <AnalyticsCard title="Total Knowledge" value="14.2GB" icon={<Database size={16}/>} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8 pb-12">
         
-        {/* DYNAMIC REGISTRATION & TRAINING FORM */}
+        {/* DYNAMIC REGISTRATION FORM */}
         <Card className="lg:col-span-2 bg-surface border-line shadow-2xl">
           <CardHeader className="border-b border-line bg-surface-2/30">
             <CardTitle className="text-xs font-mono uppercase tracking-[0.2em] flex items-center gap-2">
-              <Plus size={14} className="text-confirm" /> Initialize_New_Product_Listing
+              <Plus size={14} className="text-confirm" /> Train_New_Product_Model
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-8">
@@ -134,16 +140,16 @@ export function CompanyDashboard() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase text-text-muted">Product Identity (Model Name)</label>
+                  <label className="text-[10px] font-mono uppercase text-text-muted">Product Identity (Display Name)</label>
                   <Input 
-                    placeholder="e.g. Arctic v2 Air Conditioner" 
+                    placeholder="e.g. Arctic v2 AC" 
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     className="h-12 bg-surface-2 border-line rounded-xl focus:ring-confirm"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase text-text-muted">Unit Classification</label>
+                  <label className="text-[10px] font-mono uppercase text-text-muted">Industry Hub</label>
                   <select 
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -152,13 +158,12 @@ export function CompanyDashboard() {
                     <option>Appliance</option>
                     <option>EV / Scooter</option>
                     <option>Industrial Electronics</option>
-                    <option>Consumer Gadget</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* S3 UPLOAD AREA */}
+                {/* S3 & FASTAPI DROP ZONE */}
                 <div 
                   onClick={() => fileInputRef.current?.click()}
                   className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center transition-all cursor-pointer group ${
@@ -170,13 +175,13 @@ export function CompanyDashboard() {
                     <div className="text-center">
                         <CheckCircle2 size={40} className="text-confirm mx-auto mb-3" />
                         <p className="text-sm font-bold truncate max-w-[200px] text-text">{selectedFile.name}</p>
-                        <button onClick={(e) => { e.stopPropagation(); setSelectedFile(null); }} className="text-[10px] text-alert mt-4 uppercase font-bold hover:underline">Delete Packet</button>
+                        <button onClick={(e) => { e.stopPropagation(); setSelectedFile(null); }} className="text-[10px] text-alert mt-4 uppercase font-bold hover:underline">Clear File</button>
                     </div>
                   ) : (
                     <>
                         <Upload size={40} className="text-text-faint group-hover:text-confirm transition-colors mb-3" />
-                        <p className="text-sm font-bold text-text">Source Material Packet</p>
-                        <p className="text-[10px] text-text-faint mt-1 uppercase font-mono tracking-widest">PDF / MP4 / JPEG</p>
+                        <p className="text-sm font-bold text-text">Upload PDF Manual</p>
+                        <p className="text-[10px] text-text-faint mt-1 uppercase font-mono tracking-widest">Triggers Model Training</p>
                     </>
                   )}
                 </div>
@@ -184,7 +189,7 @@ export function CompanyDashboard() {
                 {/* URL INPUT */}
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase text-text-muted italic">Or provide documentation link</label>
+                    <label className="text-[10px] font-mono uppercase text-text-muted italic">Or provide web link</label>
                     <div className="relative">
                         <Globe size={14} className="absolute left-4 top-4 text-text-faint" />
                         <Input 
@@ -198,22 +203,22 @@ export function CompanyDashboard() {
                   <div className="p-5 rounded-2xl bg-confirm/5 border border-confirm/10 flex gap-4">
                     <Database size={20} className="text-confirm shrink-0" />
                     <p className="text-[11px] text-confirm/80 leading-relaxed font-medium">
-                      Note: Initializing registration will trigger the automated RAG pipeline. This product will be listed in the marketplace as soon as training completes.
+                      Initializing registration will synchronize the RAG pipeline with your local model. Product becomes discoverable instantly.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-line flex items-center justify-between">
-                <p className="text-[10px] text-text-faint font-mono uppercase tracking-widest italic underline decoration-confirm/30">Secure_S3_Gateway_Active</p>
+                <p className="text-[10px] text-text-faint font-mono uppercase tracking-widest italic decoration-confirm/30">Localhost:8000 Connectivity: Online</p>
                 <Button 
                     type="submit" 
                     disabled={isUploading || (!selectedFile && !externalUrl)}
                     className="bg-confirm text-canvas font-bold px-12 h-14 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-confirm/20"
                 >
-                  {isUploading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Indexing_Knowledge...</> : 
-                   uploadSuccess ? <><CheckCircle2 className="mr-2 h-5 w-5" /> Unit_Listed</> : 
-                   "Initialize Product Registration"}
+                  {isUploading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Training_AI...</> : 
+                   uploadSuccess ? <><CheckCircle2 className="mr-2 h-5 w-5" /> Model_Ready</> : 
+                   "Start Model Training"}
                 </Button>
               </div>
             </form>
@@ -227,7 +232,7 @@ export function CompanyDashboard() {
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <div className="flex justify-between text-[10px] font-mono text-text-muted">
-                                <span>VECTOR_SPACE_UTILIZATION</span>
+                                <span>RAG_CHUNKING_NODES</span>
                                 <span className="text-confirm">82.4%</span>
                             </div>
                             <div className="h-1.5 w-full bg-surface-2 rounded-full overflow-hidden">
@@ -235,8 +240,8 @@ export function CompanyDashboard() {
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <StatBoxSmall label="Active Nodes" val="14,801" />
-                            <StatBoxSmall label="Avg Latency" val="12ms" />
+                            <StatBoxSmall label="Active Index" val="4,209" />
+                            <StatBoxSmall label="Port Status" val="8000" />
                         </div>
                     </div>
                 </CardContent>
@@ -244,15 +249,15 @@ export function CompanyDashboard() {
 
             <Card className="bg-surface border-line">
                 <CardHeader>
-                    <CardTitle className="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">Global_Assets_Log</CardTitle>
+                    <CardTitle className="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">Ingestion_Log</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <ScrollArea className="h-[250px] pr-4">
                         <div className="space-y-4">
-                            <AssetItem name="Motor_Manual_v2.pdf" status="Synced" />
-                            <AssetItem name="Wiring_RZ1_Final.png" status="Indexed" />
-                            <AssetItem name="Repair_Vlog_01.mp4" status="Ready" />
-                            <AssetItem name="FAQ_Database_v1" status="Indexed" />
+                            <AssetItem name="Philix_AC_Guide.pdf" status="Synced" />
+                            <AssetItem name="Wash_Repair_V1.pdf" status="Trained" />
+                            <AssetItem name="Monitor_Datasheet" status="Indexed" />
+                            <AssetItem name="Circuit_Logic.png" status="Ready" />
                         </div>
                     </ScrollArea>
                 </CardContent>
@@ -263,7 +268,7 @@ export function CompanyDashboard() {
   );
 }
 
-// Internal Sub-components
+// Sub-components
 function AssetItem({ name, status }: { name: string, status: string }) {
     return (
         <div className="flex items-center justify-between p-3.5 bg-surface-2/50 border border-line rounded-xl hover:border-confirm/40 transition-colors">

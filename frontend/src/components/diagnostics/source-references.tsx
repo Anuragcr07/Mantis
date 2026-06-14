@@ -1,11 +1,12 @@
 "use client";
 
-import { FileText, Video, Image } from "lucide-react";
+import { FileText, PlayCircle, Image, ExternalLink } from "lucide-react";
 import { SourceReference } from "@/lib/types";
 
-const ICONS: Record<SourceReference["type"], typeof FileText> = {
+// 1. Icon mapping with a technical style
+const ICONS = {
   pdf: FileText,
-  video: Video,
+  video: PlayCircle,
   diagram: Image,
 };
 
@@ -13,31 +14,61 @@ interface SourceReferencesProps {
   sources: SourceReference[];
 }
 
-export function SourceReferences({ sources }: SourceReferencesProps) {
+export function SourceReferences({ sources = [] }: SourceReferencesProps) {
+  // Empty State: Matches the "Awaiting symptom" placeholder style
   if (sources.length === 0) {
     return (
-      <p className="text-sm text-text-faint">
-        Reference material will appear here once the assistant has narrowed down the likely cause.
-      </p>
+      <div className="px-1 py-2">
+        <p className="text-[11px] font-mono text-text-faint uppercase tracking-wider italic leading-relaxed">
+          // No_External_Assets_Cited
+        </p>
+        <p className="text-[10px] text-text-muted mt-1">
+          Reference material will appear here once the assistant cites specific manuals or videos.
+        </p>
+      </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      {sources.map((source) => {
-        const Icon = ICONS[source.type];
+      {sources.map((source, index) => {
+        // 2. SAFE ICON LOOKUP: 
+        // Force lowercase to match keys and provide FileText as a fallback to prevent "undefined" crash.
+        const typeKey = (source.type?.toLowerCase() || "pdf") as keyof typeof ICONS;
+        const Icon = ICONS[typeKey] || FileText;
+
         return (
           <div
-            key={source.id}
-            className="flex items-center gap-3 rounded-xl border border-line bg-surface-2 px-4 py-3"
+            // 3. SAFE KEY:
+            // Use index combined with title to guarantee uniqueness and stop browser warnings.
+            key={`source-${index}-${source.title}`}
+            className="group flex items-center gap-3 rounded-xl border border-line bg-surface-2/40 p-3 transition-all hover:border-signal/40 hover:bg-surface-2 cursor-pointer shadow-sm"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-3 text-text-muted">
+            {/* Technical Icon Box */}
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-canvas text-text-muted group-hover:text-signal transition-colors border border-line/50">
               <Icon className="h-5 w-5" />
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-text">{source.title}</p>
-              <p className="text-xs text-text-muted">{source.detail}</p>
+
+            {/* Metadata Text */}
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-bold text-text group-hover:text-signal transition-colors">
+                {source.title || "Technical Document"}
+              </p>
+              
+              <div className="flex items-center gap-2 mt-1">
+                {/* Display the reference detail provided by the backend */}
+                <span className="text-[9px] font-mono font-bold text-text-faint uppercase bg-canvas px-1.5 py-0.5 rounded border border-line">
+                  {source.detail || "REFERENCE"}
+                </span>
+                
+                {source.type === 'video' && (
+                    <span className="text-[9px] font-mono text-confirm animate-pulse">● VIDEO_READY</span>
+                )}
+              </div>
             </div>
+
+            {/* External Indicator */}
+            <ExternalLink size={12} className="text-text-faint opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         );
       })}

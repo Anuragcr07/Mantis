@@ -70,6 +70,7 @@ export function ChatComposer({ onSend, disabled }: ChatComposerProps) {
     const next: Attachment[] = Array.from(files)
       .filter((file) => file.type.startsWith("image/"))
       .map((file) => ({
+        file,
         id: `${file.name}-${Date.now()}`,
         name: file.name,
         url: URL.createObjectURL(file),

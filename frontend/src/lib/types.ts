@@ -1,6 +1,7 @@
 export type Sender = "user" | "assistant";
 
 export interface Attachment {
+  file: File;
   id: string;
   name: string;
   url: string;

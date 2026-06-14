@@ -32,7 +32,7 @@ export function ProductSidebar({ products, selected, onSelect, onReset }: Produc
       <div className="flex flex-col gap-2">
         <p className="px-1 text-xs uppercase tracking-[0.18em] text-text-muted">Your products</p>
         {products.map((product) => {
-          const Icon = ICONS[product.icon];
+          const Icon = ICONS[product.icon] ?? Bike;
           const isActive = product.id === selected.id;
           return (
             <button

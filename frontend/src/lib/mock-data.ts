@@ -79,7 +79,7 @@ export const HORN_SCENARIO: ScenarioStep[] = [
       "Got it — let's narrow this down together. When you press the horn button, do you hear anything at all, even a faint click from under the dashboard?",
     quickReplies: ["No sound at all", "Faint click, no horn sound", "Sound is weak or distorted"],
     diagnosticPatch: {
-      symptom: "Horn not working",
+      symptom: "start the diagnosis",
       status: "diagnosing",
       confidence: 18,
       causes: CAUSES_INITIAL,
@@ -121,7 +121,7 @@ export const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: "m0",
     sender: "user",
-    text: "My horn stopped working.",
+    text: "start the diagnosis",
     time: "09:41",
   },
 ];
