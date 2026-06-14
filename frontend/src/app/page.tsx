@@ -1,54 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { CustomerGarage } from "@/components/customer/customer-garage";
 import { CompanyDashboard } from "@/components/company/company-dashboard";
 import { ShieldCheck, UserCircle, LogOut } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
-  // role can be 'customer' or 'company'
-  const [role, setRole] = useState<"customer" | "company">("customer");
+  const searchParams = useSearchParams();
   
-  // isRepairing determines if we are looking at the Garage or the AI Mechanic
+  // Initial state based on URL parameters (simulating login redirect)
+  const [role, setRole] = useState<"customer" | "company">("customer");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRepairing, setIsRepairing] = useState(false);
 
-  // --- 1. CUSTOMER VIEW LOGIC ---
+  useEffect(() => {
+    const roleParam = searchParams.get("role");
+    const authParam = searchParams.get("authenticated");
+
+    if (authParam === "true") {
+      setIsLoggedIn(true);
+      if (roleParam === "company") setRole("company");
+    }
+  }, [searchParams]);
+
+  // If not logged in, show a simple landing view or redirect to login
+  if (!isLoggedIn) {
+    return (
+      <div className="h-screen bg-canvas flex flex-col items-center justify-center text-center p-6">
+        <div className="bg-signal p-4 rounded-2xl mb-6">
+          <ShieldCheck size={48} className="text-canvas" />
+        </div>
+        <h1 className="text-4xl font-display font-bold mb-4">Torque AI Mechanic</h1>
+        <p className="text-text-muted mb-8 max-w-md">The universal troubleshooting and maintenance platform for all your physical products.</p>
+        <Link href="/login">
+          <button className="bg-signal text-canvas font-bold px-8 py-3 rounded-xl hover:scale-105 transition-transform">
+            Enter Platform
+          </button>
+        </Link>
+      </div>
+    );
+  }
+
+  // --- LOGGED IN VIEWS ---
   if (role === "customer") {
     return (
       <div className="flex h-screen flex-col bg-canvas text-text overflow-hidden">
-        {/* Navigation Bar */}
         <header className="flex items-center justify-between border-b border-line px-6 py-3 bg-surface/50 shrink-0">
           <div className="flex items-center gap-3">
             <div className="bg-signal text-canvas font-bold px-2 py-0.5 rounded text-sm tracking-tighter">TORQUE</div>
-            <span className="text-text-muted text-[10px] font-mono uppercase tracking-[0.2em] hidden sm:block border-l border-line pl-3">
-              Customer Portal
-            </span>
+            <span className="text-text-muted text-[10px] font-mono uppercase tracking-[0.2em] hidden sm:block border-l border-line pl-3">Customer Portal</span>
           </div>
-          
-          <div className="flex items-center gap-6">
-            {!isRepairing && (
-              <button 
-                onClick={() => setRole("company")} 
-                className="text-xs text-text-muted hover:text-signal transition-colors flex items-center gap-1.5 font-medium"
-              >
-                <ShieldCheck size={14} /> Switch to Philix Admin
-              </button>
-            )}
-            <div className="flex items-center gap-2 text-sm font-medium border-l border-line pl-6">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setRole("company")} className="text-xs text-text-muted hover:text-signal transition-colors flex items-center gap-1.5"><ShieldCheck size={14} /> Admin Mode</button>
+            <div className="flex items-center gap-2 text-sm font-medium border-l border-line pl-4">
               <UserCircle size={18} className="text-text-muted" />
-              <span className="hidden sm:inline">Alex's Garage</span>
+              <button onClick={() => setIsLoggedIn(false)} className="hover:text-alert"><LogOut size={16}/></button>
             </div>
           </div>
         </header>
 
-        {/* Content Area */}
         <main className="flex-1 overflow-hidden relative">
           {isRepairing ? (
-            // The AI Mechanic
             <AppShell onBack={() => setIsRepairing(false)} />
           ) : (
-            // The Garage (Products List)
             <CustomerGarage onStartRepair={() => setIsRepairing(true)} />
           )}
         </main>
@@ -56,27 +73,19 @@ export default function Home() {
     );
   }
 
-  // --- 2. COMPANY (PHILIX) VIEW LOGIC ---
   return (
     <div className="flex h-screen flex-col bg-canvas text-text">
-      {/* Admin Header */}
       <header className="flex items-center justify-between border-b border-line px-6 py-4 bg-surface shrink-0">
         <div className="flex items-center gap-3">
           <div className="bg-confirm text-canvas font-bold px-2 py-0.5 rounded text-sm italic tracking-tighter">PHILIX</div>
-          <span className="text-text-muted text-[10px] font-mono uppercase tracking-[0.2em] border-l border-line pl-3">
-            Admin Command Center
-          </span>
+          <span className="text-text-muted text-[10px] font-mono uppercase tracking-[0.2em] border-l border-line pl-3">Admin Console</span>
         </div>
-        <button 
-          onClick={() => setRole("customer")} 
-          className="bg-surface-2 border border-line px-4 py-1.5 rounded-lg text-xs hover:bg-surface-3 transition-all flex items-center gap-2 font-semibold text-text"
-        >
-          <LogOut size={14} /> Exit Admin Mode
-        </button>
+        <div className="flex gap-4">
+           <button onClick={() => setRole("customer")} className="text-xs text-text-muted hover:text-text transition-colors">Switch to Customer</button>
+           <button onClick={() => setIsLoggedIn(false)} className="text-alert"><LogOut size={18} /></button>
+        </div>
       </header>
-
-      {/* The Dashboard Component */}
-      <main className="flex-1 overflow-y-auto bg-grid">
+      <main className="flex-1 overflow-y-auto">
         <CompanyDashboard />
       </main>
     </div>
