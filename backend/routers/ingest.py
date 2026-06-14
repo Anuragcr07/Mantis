@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from services.moss_service import index_to_moss
 from services.pdf_service import extract_and_chunk
 from services.chroma_service import index_chunks, get_collection_stats
 from services.video_service import load_transcript, get_chunks_from_transcript
@@ -18,7 +19,6 @@ async def ingest_pdf(product_id: str, file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, f)
         chunks = extract_and_chunk(temp_path, product_id)
         result = index_chunks(product_id, chunks)
-        await index_to_moss(product_id, chunks)    # ← ADD THIS
         stats = get_collection_stats(product_id)
         return {
             "status": "success",
