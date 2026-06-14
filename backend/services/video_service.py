@@ -1,5 +1,7 @@
 import json
 import os
+import groq
+import tempfile
 
 def load_transcript(transcript_path: str) -> list:
     with open(transcript_path, "r") as f:
@@ -42,3 +44,42 @@ def get_chunks_from_transcript(transcript: list, product_id: str, video_id: str)
             }
         })
     return chunks
+
+
+groq_client = groq.Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+def transcribe_and_chunk(video_bytes: bytes, product_id: str, video_id: str) -> list:
+    """
+    Full pipeline: video bytes → transcribe → chunk
+    """
+    # Save to temp file
+    with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp:
+        tmp.write(video_bytes)
+        tmp_path = tmp.name
+
+    try:
+        # Transcribe using Groq Whisper
+        with open(tmp_path, "rb") as f:
+            transcription = groq_client.audio.transcriptions.create(
+                file=(tmp_path, f.read()),
+                model="whisper-large-v3",
+                response_format="verbose_json",
+                timestamp_granularities=["segment"]
+            )
+
+        # Convert to your existing transcript format
+        transcript = [
+            {
+                "text": seg.get("text", ""),
+                "timestamp_label": f"{seg.get('start', 0):.0f}s",
+                "start": seg.get("start", 0),
+                "end": seg.get("end", 0)
+            }
+            for seg in transcription.segments
+        ]
+
+        # Use your existing chunking function
+        return get_chunks_from_transcript(transcript, product_id, video_id)
+
+    finally:
+        os.unlink(tmp_path)

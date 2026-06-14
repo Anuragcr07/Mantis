@@ -35,3 +35,13 @@ async def query_moss(product_id: str, query: str, top_k: int = 5):
 def query_moss_sync(product_id: str, query: str, top_k: int = 5):
     """Sync wrapper for FastAPI endpoints"""
     return asyncio.run(query_moss(product_id, query, top_k))
+
+# moss_service.py - MOSS disabled, using ChromaDB only
+
+# async def query_moss(product_id: str, query: str, top_k: int = 5):
+#     """MOSS disabled - returning empty list, ChromaDB handles search"""
+#     return []
+
+# async def index_to_moss(product_id: str, chunks: list):
+#     """MOSS disabled"""
+#     return {"indexed": 0, "skipped": True}

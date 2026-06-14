@@ -20,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+from routers.diagnose import router as diagnose_router
+app.include_router(diagnose_router)
+
+
 from routers import ingest
 app.include_router(ingest.router)
 
@@ -83,3 +87,4 @@ RULES:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+
