@@ -1,120 +1,257 @@
-Mantis 
-AI-Powered Product Diagnostic Platform
-Mantis is a SaaS platform where companies upload product documentation (PDFs, videos) and users get AI-powered diagnostic assistance — like talking to a real technician, not a search engine.
+# 🔧 Mantis — AI Product Diagnostic Platform
 
-Features
-Core
+> **"Like having a expert technician in your pocket."**  
+> Mantis turns your product manuals and repair videos into an intelligent, conversational diagnostic assistant.
 
-AI diagnostic assistant that asks focused follow-up questions
-Cites exact page numbers from product manuals
-Multi-turn conversation with memory
-Image-based troubleshooting via Grok Vision
-Video transcript ingestion with timestamp citations
-PDF manual ingestion and semantic search
+---
 
-Bonus Features Implemented
+## 🎯 The Problem
 
-🖼️ Image-based Troubleshooting — upload photos of error screens or damaged parts for visual diagnosis
-🎥 Video Support — Whisper transcribes repair videos; AI directs users to relevant timestamps
-🌍 Multi-language Support — LLaMA 3.3 70B handles queries in multiple languages
+When a product breaks, users are left searching through 50-page manuals, watching irrelevant YouTube videos, or waiting days for a technician. Companies spend thousands on support calls for issues that could be solved in minutes.
 
+## ✅ The Solution
 
-Tech Stack
-Frontend
-TechnologyPurposeNext.js 15Core React framework with SSR and secure API routesTailwind CSS v4Utility-first styling for the dark-mode industrial UIshadcn/uiAccessible UI components (cards, inputs, progress bars)MongoDB AtlasCloud NoSQL database for product metadata and garage recordsMongooseODM library for structured user and product schemasAWS S3Cloud storage for manuals, repair videos, and fault photosAWS Pre-signed URLsSecure direct-to-cloud file uploads
-Backend
-TechnologyPurposeFastAPIHigh-performance Python REST API frameworkChromaDBPersistent vector database for semantic search over manualsMOSS (inferedge-moss)Fast MiniLM-based search layer for sub-10ms retrievalGroq (LLaMA 3.3 70B)Primary LLM for diagnostic responsesGrok Vision (grok-2-vision)Vision model for image-based troubleshootingMongoDB + MotorAsync NoSQL database for conversation historypdfplumberPDF text extraction and chunkingOpenAI WhisperSpeech-to-text transcription of repair videosyt-dlpYouTube video audio downloaderpython-dotenvSecure environment variable managementuvicornASGI server for running FastAPI
+Mantis lets companies upload their product documentation once. Users then get instant, intelligent, cited diagnostic assistance — the AI asks focused follow-up questions, references exact pages from the manual, and guides users to a fix step by step.
 
- Architecture
-PDF/Video uploaded by company
-        ↓
-POST /ingest/pdf/{product_id} or /ingest/transcript/{product_id}/{video_id}
-        ↓
-pdfplumber → extract text → chunk into ~400 word pieces
-Whisper → transcribe video → timestamp segments
-        ↓
-ChromaDB → semantic vector storage (cosine similarity)
-MOSS → fast search index
-        ↓
-User reports issue via chat UI
-        ↓
-MOSS query → top chunks (fast)
-ChromaDB → fetch chunks with metadata (page, filename, timestamp)
-        ↓
-Groq/Grok gets: chunks + conversation history + user query
-        ↓
-Response with diagnosis + PDF page citation + video timestamp
-MongoDB → conversation history saved
+---
 
-📁 Backend Structure
-backend/
-├── main.py                        # FastAPI app entry point
-├── .env                           # API keys (not committed)
-├── requirements.txt               # Python dependencies
-├── routers/
-│   ├── ingest.py                  # PDF and transcript ingestion endpoints
-│   ├── diagnose.py                # Single diagnosis endpoint
-│   ├── chat.py                    # Multi-turn chat endpoint
-│   ├── auth.py                    # Authentication
-│   ├── products.py                # Product management
-│   └── documents.py               # Document management
-├── services/
-│   ├── chroma_service.py          # ChromaDB vector operations
-│   ├── pdf_service.py             # PDF extraction and chunking
-│   ├── video_service.py           # Transcript loading and chunking
-│   ├── moss_service.py            # MOSS fast search
-│   ├── agent_service.py           # Core diagnostic agent
-│   ├── grok_service.py            # Groq/Grok LLM routing
-│   ├── llm_service.py             # Prompt building
-│   └── db_service.py              # MongoDB operations
-├── models/
-│   ├── user.py                    # User model
-│   ├── product.py                 # Product model
-│   └── chat.py                    # Chat/message models
-├── knowledge/
-│   ├── knowledge_graph.json       # Diagnostic decision trees
-│   ├── source_map.json            # Chunk to page mappings
-│   └── transcripts/               # Whisper transcript JSONs
-└── scripts/
-    └── run_whisper.py             # Video transcription script
+## 🎥 Demo
+Meet Mantis — an AI diagnostic platform that turns product manuals into intelligent support.
+A user types: 'water is leaking from my AC.' Instantly, Mantis references Section 3, Page 15 of the official manual — checking the drain pipe, air filter, and evaporator coils — with exact page citations.
+No 50-page manual. No waiting for a technician. Just precise, cited, step-by-step guidance — powered by your own product documentation.
+This is Mantis
 
-Setup
-Prerequisites
+[▶ Watch Full Demo Video](https://github.com/user-attachments/assets/a6584355-9b3e-4e37-ba81-367d73640ed4)
 
-Python 3.13+
-Node.js 18+
-MongoDB (local or Atlas)
-ffmpeg
+---
 
-Backend
-bashcd backend
+## ✨ Features
+
+### Core
+- 🤖 **Conversational AI Diagnosis** — asks ONE focused question at a time to narrow down the issue
+- 📄 **Manual-cited Answers** — every response cites the exact page and section from the official manual
+- 🧠 **Multi-turn Memory** — remembers the full conversation context via MongoDB
+- 📹 **Video Support** — Whisper transcribes repair videos; AI directs users to exact timestamps
+- 🖼️ **Image Troubleshooting** — upload photos of error screens or damaged parts for visual diagnosis
+- 🌍 **Multi-language** — ask questions in any language, get answers in the same language
+
+### Bonus Features Implemented
+| Feature | Status |
+|---|---|
+| Image-based Troubleshooting | ✅ Grok Vision |
+| Video Timestamp Citations | ✅ Whisper + ChromaDB |
+| Multi-language Support | ✅ LLaMA 3.3 70B |
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+| Technology | Purpose |
+|---|---|
+| Next.js 15 | Core React framework with SSR and secure API routes |
+| Tailwind CSS v4 | Utility-first styling for the dark-mode industrial UI |
+| shadcn/ui | Accessible UI components (cards, inputs, progress bars) |
+| MongoDB Atlas | Cloud NoSQL database for product metadata and garage records |
+| Mongoose | ODM library for structured user and product schemas |
+| AWS S3 | Cloud storage for manuals, repair videos, and fault photos |
+| AWS Pre-signed URLs | Secure direct-to-cloud file uploads without exposing credentials |
+
+### Backend
+| Technology | Purpose |
+|---|---|
+| FastAPI | High-performance Python REST API framework |
+| ChromaDB | Persistent vector database for semantic search over manuals |
+| MOSS (inferedge-moss) | Fast MiniLM-based search layer for sub-10ms retrieval |
+| Groq (LLaMA 3.3 70B) | Primary LLM for fast, accurate diagnostic responses |
+| Grok Vision (grok-2-vision) | Vision model for image-based troubleshooting |
+| MongoDB + Motor | Async database for persistent conversation history |
+| pdfplumber | PDF text extraction and intelligent chunking |
+| OpenAI Whisper | Speech-to-text transcription of repair videos |
+| yt-dlp + ffmpeg | YouTube video audio extraction |
+| python-dotenv | Secure environment variable management |
+
+---
+
+## 🏗️ How It Works
+Company uploads PDF manual or repair video
+
+↓
+
+/ingest/pdf  or  /ingest/transcript
+
+↓
+
+pdfplumber extracts text → chunks into ~400 word pieces
+
+Whisper transcribes video → timestamped segments
+
+↓
+
+ChromaDB stores chunks as semantic vectors
+
+MOSS indexes chunks for fast retrieval
+
+↓
+
+User describes their issue in the chat
+
+↓
+
+MOSS finds top matching chunks instantly
+
+ChromaDB fetches full chunks with page/timestamp metadata
+
+↓
+
+LLaMA 3.3 70B receives chunks + conversation history
+
+Responds with diagnosis + exact page citation + video timestamp
+
+↓
+
+MongoDB saves conversation for multi-turn memory
+
+---
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+- Python 3.13+
+- Node.js 18+
+- MongoDB (local or Atlas)
+- ffmpeg (`brew install ffmpeg`)
+
+### Backend Setup
+
+```bash
+cd backend
 pip install -r requirements.txt
-Create .env:
+```
+
+Create `backend/.env`:
+```env
 GROQ_API_KEY=your_groq_api_key
 GROK_API_KEY=your_grok_api_key
 MOSS_PROJECT_ID=your_moss_project_id
 MOSS_PROJECT_KEY=your_moss_project_key
 MONGODB_URI=mongodb://localhost:27017
-Run server:
-bashpython3 -m uvicorn main:app --reload --port 8000
-Frontend
-bashcd frontend
+```
+
+Start the server:
+```bash
+python3 -m uvicorn main:app --reload --port 8000
+```
+
+Swagger docs available at: **http://localhost:8000/docs**
+
+### Frontend Setup
+
+```bash
+cd frontend
 npm install
 npm run dev
+```
 
- API Endpoints
-MethodRoutePurposeGET/Health checkPOST/ingest/pdf/{product_id}Upload and index PDF manualPOST/ingest/transcript/{product_id}/{video_id}Upload and index video transcriptGET/ingest/stats/{product_id}Check indexed chunksPOST/diagnose/Single AI diagnosisPOST/chat/{product_id}Multi-turn diagnostic chatGET/documents/{product_id}Get document statsDELETE/documents/{product_id}Delete product index
+Open **http://localhost:3000**
+
+---
+
+## 📡 API Reference
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Health check |
+| POST | `/ingest/pdf/{product_id}` | Upload and index a PDF manual |
+| POST | `/ingest/transcript/{product_id}/{video_id}` | Upload and index a video transcript |
+| GET | `/ingest/stats/{product_id}` | Check how many chunks are indexed |
+| POST | `/diagnose/` | Single-turn AI diagnosis |
+| POST | `/chat/{product_id}` | Multi-turn diagnostic chat |
+| GET | `/documents/{product_id}` | Get document stats |
+| DELETE | `/documents/{product_id}` | Delete product knowledge base |
+
+---
+
+## 🎯 Demo Products
+
+| Product | Manual | Video Transcript |
+|---|---|---|
+| Air Conditioner | ✅ 128 chunks | ✅ 147 segments |
+| Washing Machine | ✅ 153 chunks | — |
+| Monitor | ✅ 113 chunks | — |
+
+---
+
+## 📁 Project Structure
+Mantis/
+
+├── backend/
+
+│   ├── main.py
+
+│   ├── routers/
+
+│   │   ├── ingest.py
+
+│   │   ├── diagnose.py
+
+│   │   ├── chat.py
+
+│   │   └── documents.py
+
+│   ├── services/
+
+│   │   ├── chroma_service.py
+
+│   │   ├── pdf_service.py
+
+│   │   ├── video_service.py
+
+│   │   ├── moss_service.py
+
+│   │   ├── agent_service.py
+
+│   │   ├── grok_service.py
+
+│   │   ├── llm_service.py
+
+│   │   └── db_service.py
+
+│   ├── models/
+
+│   │   ├── user.py
+
+│   │   ├── product.py
+
+│   │   └── chat.py
+
+│   ├── knowledge/
+
+│   │   ├── knowledge_graph.json
+
+│   │   └── transcripts/
+
+│   └── scripts/
+
+│       └── run_whisper.py
+
+└── frontend/
+
+├── src/
+
+│   ├── app/
+
+│   ├── components/
+
+│   ├── models/
+
+│   └── lib/
+
+└── package.json
 
 
-<img width="654" height="408" alt="DEMO_mantis" src="https://github.com/user-attachments/assets/aa83cbc3-3a6e-42cc-ad83-31395b2c1180" />
-
-> A user reports "water is leaking from my AC" — Mantis instantly references 
-> Section 3, Page 15 of the official manual and provides three targeted 
-> troubleshooting steps with exact page citations.
 
 
 
-
-https://github.com/user-attachments/assets/2ab40d3b-b69a-4438-ba7b-4a16846436fe
 
 
