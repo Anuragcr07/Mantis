@@ -150,12 +150,29 @@ Swagger docs available at: **http://localhost:8000/docs**
 ```bash
 cd frontend
 npm install
+```
+
+Create `frontend/.env.local`:
+```env
+# Database
+MONGODB_URI=your_mongodb_uri
+
+# AWS S3
+AWS_REGION=your_region
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+AWS_S3_BUCKET_NAME=your_bucket
+
+# AI
+OPENAI_API_KEY=your_key
+```
+
+Start the dev server:
+```bash
 npm run dev
 ```
 
 Open **http://localhost:3000**
-
----
 
 ## 📡 API Reference
 
