@@ -114,6 +114,7 @@ MethodRoutePurposeGET/Health checkPOST/ingest/pdf/{product_id}Upload and index P
 
 
 
+
 https://github.com/user-attachments/assets/2ab40d3b-b69a-4438-ba7b-4a16846436fe
 
 
