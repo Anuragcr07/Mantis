@@ -15,6 +15,7 @@ function HomeContent() {
   const [role, setRole] = useState<"customer" | "company" | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRepairing, setIsRepairing] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   
   // NEW: State to store the specific machine selected for repair
   const [activeUnit, setActiveUnit] = useState<any>(null);
@@ -26,6 +27,15 @@ function HomeContent() {
     if (authParam === "true") {
       setIsLoggedIn(true);
       setRole(roleParam as any);
+
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error("Failed to parse user from storage", e);
+        }
+      }
     }
   }, [searchParams]);
 
@@ -34,6 +44,8 @@ function HomeContent() {
     setRole(null);
     setActiveUnit(null);
     setIsRepairing(false);
+    setUser(null);
+    localStorage.removeItem("user");
     router.push("/login");
   };
 
@@ -69,7 +81,7 @@ function HomeContent() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-text-muted font-medium pr-4 border-r border-line">
               <UserCircle size={18} className="text-signal/60" />
-              <span className="hidden xs:inline">Alex M.</span>
+              <span className="hidden xs:inline">{user?.name || "Alex M."}</span>
             </div>
             <button 
                 onClick={handleLogout} 

@@ -56,7 +56,8 @@ export function CompanyDashboard() {
         const formData = new FormData();
         formData.append("file", selectedFile); // Backend expects key 'file'
 
-        const fastApiResponse = await fetch(`http://localhost:8000/ingest/pdf/${productId}`, {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const fastApiResponse = await fetch(`${apiBase}/ingest/pdf/${productId}`, {
           method: "POST",
           body: formData,
         });

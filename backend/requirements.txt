@@ -25,3 +25,4 @@ aiobotocore
 cryptography
 bcrypt
 PyJWT
+inferedge-moss==1.0.0b19

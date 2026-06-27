@@ -22,7 +22,9 @@ export async function POST(req: Request) {
       lastServiceDate: data.lastServiceDate ? new Date(data.lastServiceDate) : null,
       usageReading: Number(data.usage),
       status: "optimal",
-      healthScore: 100
+      healthScore: 100,
+      productId: data.productId,
+      iconName: data.iconName
     });
 
     console.log("✅ Successfully saved to MongoDB:", newItem._id);

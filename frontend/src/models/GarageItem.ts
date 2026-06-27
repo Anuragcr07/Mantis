@@ -12,6 +12,8 @@ const GarageItemSchema = new mongoose.Schema({
   usageReading: Number,
   healthScore: { type: Number, default: 100 },
   status: { type: String, default: "optimal" },
+  productId: String,
+  iconName: String,
 }, { timestamps: true });
 
 export default mongoose.models.GarageItem || mongoose.model("GarageItem", GarageItemSchema);

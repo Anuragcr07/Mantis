@@ -83,7 +83,8 @@ export function AppShell({ onBack, activeUnit, registeredUnits = [] }: AppShellP
         formData.append("image", attachments[0].file);
       }
 
-      const res = await fetch(`http://localhost:8000/chat/${selectedProduct.id}`, {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/chat/${selectedProduct.id}`, {
         method: "POST",
         body: formData,
       });
