@@ -1,5 +1,6 @@
 .env
 uploads/
-maintenance_db/
+# Commented out to allow committing pre-indexed databases on free tier
+# maintenance_db/
 __pycache__/
 *.pyc
