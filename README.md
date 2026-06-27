@@ -23,6 +23,8 @@ This is Mantis
 
 [▶ Watch Full Demo Video](https://github.com/user-attachments/assets/a6584355-9b3e-4e37-ba81-367d73640ed4)
 
+## Deployed link: https://mantis-7.onrender.com
+
 ---
 
 ## ✨ Features
