@@ -28,7 +28,7 @@ async def run_agent(
             await create_conversation(conversation_id, product_id, user_id)
 
     # 1. ChromaDB chunks
-    chroma_chunks = query_knowledge(product_id, query, n_results=4)
+    chroma_chunks = query_knowledge(product_id, query, n_results=8)
 
     # 2. MOSS chunks — safe handling
     try:
