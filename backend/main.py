@@ -14,6 +14,8 @@ app.add_middleware(
 )
 
 from routers import ingest, diagnose, chat
+from routers import ingest, diagnose, chat, documents
+app.include_router(documents.router)
 app.include_router(ingest.router)
 app.include_router(diagnose.router)
 app.include_router(chat.router)
