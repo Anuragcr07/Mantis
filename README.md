@@ -15,13 +15,15 @@ Mantis lets companies upload their product documentation once. Users then get in
 
 ---
 
-## 🎥 Demo
+##  Demo
 Meet Mantis — an AI diagnostic platform that turns product manuals into intelligent support.
 A user types: 'water is leaking from my AC.' Instantly, Mantis references Section 3, Page 15 of the official manual — checking the drain pipe, air filter, and evaporator coils — with exact page citations.
 No 50-page manual. No waiting for a technician. Just precise, cited, step-by-step guidance — powered by your own product documentation.
 This is Mantis
 
 [▶ Watch Full Demo Video](https://github.com/user-attachments/assets/a6584355-9b3e-4e37-ba81-367d73640ed4)
+
+## Deployed link: https://mantis-7.onrender.com
 
 ---
 
