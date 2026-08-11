@@ -5,8 +5,24 @@ import dns from "dns";
 dns.setDefaultResultOrder("ipv4first");
 
 export async function sendOTP(email: string, otp: string, purpose: 'login' | 'signup') {
+  let host = "smtp.gmail.com";
+  try {
+    const addresses = await dns.promises.resolve4("smtp.gmail.com");
+    if (addresses && addresses.length > 0) {
+      host = addresses[0];
+      console.log(`✉️ Resolved smtp.gmail.com to IPv4: ${host}`);
+    }
+  } catch (dnsErr) {
+    console.error("⚠️ Failed to resolve smtp.gmail.com to IPv4, falling back to default hostname:", dnsErr);
+  }
+
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: host,
+    port: 465,
+    secure: true,
+    tls: {
+      servername: "smtp.gmail.com",
+    },
     auth: {
       type: "OAuth2",
       user: process.env.GMAIL_USER,
