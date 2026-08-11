@@ -1,4 +1,8 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
+
+// Force Node.js to resolve IPv4 addresses first to avoid ENETUNREACH errors on networks with broken IPv6 routing
+dns.setDefaultResultOrder("ipv4first");
 
 export async function sendOTP(email: string, otp: string, purpose: 'login' | 'signup') {
   const transporter = nodemailer.createTransport({
