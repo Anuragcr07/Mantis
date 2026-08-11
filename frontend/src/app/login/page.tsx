@@ -39,8 +39,8 @@ export default function AuthPage() {
         });
         const data = await res.json();
         if (data.success) {
-          setIsVerifying(true);
-          setSuccessMsg(data.message);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          router.push(`/?role=${data.user.role}&authenticated=true`);
         } else {
           setErrorMsg(data.error || "Signup failed");
         }
@@ -203,7 +203,7 @@ export default function AuthPage() {
                     role === 'customer' ? 'bg-signal' : 'bg-confirm'
                   }`}
                 >
-                  {authMode === "signin" ? "Sign In" : "Register & Get Code"}{" "}
+                  {authMode === "signin" ? "Sign In" : "Register"}{" "}
                   <ArrowRight size={18} />
                 </Button>
               </form>
