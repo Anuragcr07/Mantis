@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
-import { verifyPassword, generateOTP } from "@/lib/auth";
-import { sendOTP } from "@/lib/mail";
+import { verifyPassword } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
@@ -32,24 +32,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Invalid email or password" }, { status: 400 });
     }
 
-    // Generate OTP for Login verification
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
-
-    user.otp = otp;
-    user.otpExpiry = otpExpiry;
-    await user.save();
-
-    await sendOTP(email, otp, 'login');
-
-    console.log(`🔑 Login requested, verification OTP sent to: ${email}`);
-
-    return NextResponse.json({
+    // Set the session cookie and return login success
+    const response = NextResponse.json({
       success: true,
-      requiresVerification: true,
-      message: "A verification code has been sent to your email.",
-      email
+      message: "Logged in successfully",
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role
+      }
     }, { status: 200 });
+
+    const cookieStore = await cookies();
+    cookieStore.set("user_session", JSON.stringify({ email: user.email, role: user.role }), {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+
+    console.log(`👤 User logged in successfully: ${email} (${user.role})`);
+
+    return response;
 
   } catch (error: any) {
     console.error("❌ Login API Error:", error.message);
